@@ -15,6 +15,10 @@ MonoBehaviour:
   <Id>k__BackingField: FirstMission
   <Maps>k__BackingField:
   - {fileID: 11400000, guid: e825b544fa8a1a2449c28a2b91666025, type: 2}
+  - {fileID: 11400000, guid: e825b544fa8a1a2449c28a2b91666025, type: 2}
+  - {fileID: 11400000, guid: e825b544fa8a1a2449c28a2b91666025, type: 2}
+  - {fileID: 11400000, guid: e825b544fa8a1a2449c28a2b91666025, type: 2}
+  - {fileID: 11400000, guid: e825b544fa8a1a2449c28a2b91666025, type: 2}
   <NameRu>k__BackingField: 1
   <NameEn>k__BackingField: 1
   <NameTr>k__BackingField: 1

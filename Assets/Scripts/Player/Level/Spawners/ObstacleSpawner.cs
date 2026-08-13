@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataBase.InitDataSO;
+using Enemy;
 using Enemy.StateMachine.Behaviour.States;
 using Services;
 using UnityEngine;
@@ -21,6 +23,14 @@ namespace Player.Level.Spawners
 
         private int _enemyCounter;
 
+        public int MaxMoney { get; private set; }
+        public int PoorMoney { get; private set; }
+        public int MiddleMoney { get; private set; }
+        public int BlinqMoney { get; private set; }
+        public int CasualMoney { get; private set; }
+        public int BusinessMoney { get; private set; }
+        public int CoctailMoney { get; private set; }
+
         public ObstacleSpawner(
             IObstacleService obstacleService,
             AudioSoundsService audioSoundsService,
@@ -31,9 +41,48 @@ namespace Player.Level.Spawners
             _particleEffectsService = particleEffectsService;
         }
 
-        public void SpawnObstacles()
+        public void SpawnObstacles(LevelInitData levelInitData)
         {
-            
+            foreach (var spawnPoint in levelInitData.MoneySpawnPositions)
+            {
+                SpawnMoney(spawnPoint);
+                MaxMoney += 2;
+            }
+
+            foreach (var spawnPoint in levelInitData.BottleSpawnPositions)
+            {
+                SpawnBottle(spawnPoint);
+            }
+
+            var stepMoney = MaxMoney / 6;
+            PoorMoney = stepMoney;
+            CasualMoney = 2 * stepMoney;
+            CoctailMoney = 3 * stepMoney;
+            MiddleMoney = 4 * stepMoney;
+            BusinessMoney = 5 * stepMoney;
+            BlinqMoney = 6 * stepMoney;
+        }
+
+        private Bottle SpawnBottle(Vector3 obstaclePosition)
+        {
+            Bottle bottle = _obstacleService.CreateBottle();
+
+            var obstacleSpawnPosition = obstaclePosition;
+
+            bottle.transform.position = obstacleSpawnPosition;
+
+            return bottle;
+        }
+
+        private Money SpawnMoney(Vector3 obstaclePosition)
+        {
+            Money money = _obstacleService.CreateMoney();
+
+            var obstacleSpawnPosition = obstaclePosition;
+
+            money.transform.position = obstacleSpawnPosition;
+
+            return money;
         }
 
         public void SpawnWave(EnemyWave wave)

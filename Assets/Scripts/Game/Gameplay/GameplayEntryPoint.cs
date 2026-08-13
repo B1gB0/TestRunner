@@ -29,10 +29,8 @@ namespace Game.Gameplay
         [SerializeField] private UIGameplayRootBinder _sceneUIRootPrefab;
         [SerializeField] private DataFactory _dataFactory;
         [SerializeField] private ViewFactory _viewFactory;
-
-
-        private LevelInitData _levelInitData;
-        private Level _level;
+        [SerializeField] private Mission _mission;
+        
         private UIRootView _uiRoot;
         private UIGameplayRootBinder _uiScene;
         private Container _container;
@@ -51,6 +49,9 @@ namespace Game.Gameplay
 
         private ObstacleInitData _obstacleInitData;
         private PlayerInitData _playerInitData;
+        
+        private Level _currentLevel;
+        private LevelInitData _currentLevelInitData;
 
         private EndGamePanel _endGamePanel;
 
@@ -114,13 +115,16 @@ namespace Game.Gameplay
 
             _playerService.GetSceneObjects(_container, _freeLookCamera);
 
-            _level = FindObjectOfType<Level>();
-            GameObjectInjector.InjectObject(_level.gameObject, _container);
+            Level level = Instantiate(_mission.Maps[MinCountValue].Level);
+            GameObjectInjector.InjectObject(level.gameObject, _container);
+
+            _currentLevel = level;
+            _currentLevelInitData = _mission.Maps[MinCountValue];
 
             _obstacleService.GetData(_obstacleInitData);
 
-            _level.GetDependencies(
-                _levelInitData,
+            _currentLevel.GetDependencies(
+                _currentLevelInitData,
                 _playerInitData,
                 _freeLookCamera,
                 _viewFactory,
@@ -132,7 +136,7 @@ namespace Game.Gameplay
 
             _floatingTextService.Init(floatingTextView);
 
-            await _level.OnStartLevel();
+            await _currentLevel.OnStartLevel();
 
             var exitSceneSignalSubject = new Subject<Unit>();
             _uiScene.Bind(exitSceneSignalSubject);
@@ -151,7 +155,7 @@ namespace Game.Gameplay
                 _playerService.Player.Health.Die += _endGamePanel.SetDefeatPanel;
                 _playerService.Player.Health.Die += _pauseService.OnStopGameWithoutMusic;
                 uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _endGamePanel.SetLabelText;
-                _endGamePanel.OnSpawnPlayer += _level.HealthBar.Show;
+                _endGamePanel.OnSpawnPlayer += _currentLevel.HealthBar.Show;
             }
             else
             {
@@ -182,7 +186,7 @@ namespace Game.Gameplay
                 _playerService.Player.Health.Die -= _endGamePanel.SetDefeatPanel;
                 _playerService.Player.Health.Die -= _pauseService.OnStopGameWithoutMusic;
                 _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged -= _endGamePanel.SetLabelText;
-                _endGamePanel.OnSpawnPlayer -= _level.HealthBar.Show;
+                _endGamePanel.OnSpawnPlayer -= _currentLevel.HealthBar.Show;
             }
 
             _playerService.Player.Health.Die -= _uiScene.ResetCountdownTutorialPointer;
@@ -207,7 +211,6 @@ namespace Game.Gameplay
 
         private async UniTask InitData()
         {
-            _levelInitData = Instantiate(_levelInitData);
             _obstacleInitData = await _dataFactory.CreateSkeletonInitData();
             _playerInitData = await _dataFactory.CreatePlayerInitData();
         }

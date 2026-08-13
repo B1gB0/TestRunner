@@ -8,7 +8,7 @@ namespace DataBase.InitDataSO
     public class DataFactory : MonoBehaviour
     {
         private const string PlayerInitData = "PlayerInitData";
-        private const string EnemyInitData = "EnemyInitData";
+        private const string ObstacleInitData = "ObstacleInitData";
 
         private IResourceService _resourceService;
 
@@ -20,8 +20,8 @@ namespace DataBase.InitDataSO
 
         public async UniTask<ObstacleInitData> CreateSkeletonInitData()
         {
-            var skeletonData = await _resourceService.Load<ObstacleInitData>(EnemyInitData);
-            return skeletonData;
+            var obstacleData = await _resourceService.Load<ObstacleInitData>(ObstacleInitData);
+            return obstacleData;
         }
         
         public async UniTask<PlayerInitData> CreatePlayerInitData()

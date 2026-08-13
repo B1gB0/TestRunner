@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game.GameRoot;
@@ -23,7 +24,7 @@ namespace DI
         [SerializeField] private UIRootView _uiRootViewPrefab;
         [SerializeField] private GameEntryPoint _gameEntryPointPrefab;
         [SerializeField] private MissionService _missionServicePrefab;
-        
+
         private void OnDestroy()
         {
             foreach (var obj in _monoServiceObjects)
@@ -52,13 +53,13 @@ namespace DI
             RegisterTypeWithContracts<TweenAnimationService, ITweenAnimationService>(builder);
             RegisterTypeWithContracts<UILocalizationService, IUILocalizationService>(builder);
         }
-        
+
         private void RegisterTypeWithContracts<TImplementation, TContract>(ContainerBuilder builder)
         {
             builder.RegisterType(
                 typeof(TImplementation),
                 new[] { typeof(TContract) },
-                Lifetime.Singleton, 
+                Lifetime.Singleton,
                 Resolution.Lazy
             );
         }
@@ -73,10 +74,21 @@ namespace DI
             CreateService(_missionServicePrefab);
         }
 
-        private void CreateService<T>(T prefab)
-            where T : MonoBehaviour
+        private void CreateService<T>(T prefab) where T : MonoBehaviour
         {
+            if (prefab == null)
+            {
+                Debug.LogError($"Prefab of type {typeof(T)} is not assigned!");
+                return;
+            }
+
             var instance = Instantiate(prefab);
+            if (instance == null)
+            {
+                Debug.LogError($"Instantiate returned null for {typeof(T)}");
+                return;
+            }
+
             _monoServices.Add(instance);
             _monoServiceObjects.Add(instance.gameObject);
             DontDestroyOnLoad(instance);
@@ -84,22 +96,21 @@ namespace DI
 
         private void RegisterCreatedServices(ContainerBuilder builder)
         {
-            var method = typeof(ContainerBuilder).GetMethods()
-                .FirstOrDefault(m => m.Name == "RegisterValue"
-                                     && m.IsGenericMethodDefinition
-                                     && m.GetParameters().Length == 1);
-
             foreach (var service in _monoServices)
             {
-                var serviceType = service.GetType();
-                
-                var genericMethod = method.MakeGenericMethod(serviceType);
-                genericMethod.Invoke(builder, new[] { service });
-                
-                foreach (var interfaceType in serviceType.GetInterfaces())
+                if (service == null)
                 {
-                    genericMethod = method.MakeGenericMethod(interfaceType);
-                    genericMethod.Invoke(builder, new[] { service });
+                    Debug.LogWarning("Skipping null service in RegisterCreatedServices");
+                    continue;
+                }
+
+                var serviceType = service.GetType();
+                var interfaces = serviceType.GetInterfaces();
+
+                builder.RegisterValue(service);
+                if (interfaces.Length > 0)
+                {
+                    builder.RegisterValue(service, interfaces);
                 }
             }
         }
@@ -110,15 +121,14 @@ namespace DI
             {
                 foreach (var service in _monoServiceObjects)
                 {
-                    GameObjectInjector.InjectObject(service, container);
+                    if (service != null)
+                        GameObjectInjector.InjectObject(service, container);
                 }
 
                 foreach (var service in _monoServices)
                 {
                     if (service is IInitializable initializable)
-                    {
                         initializable.Initialize();
-                    }
                 }
             };
         }

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55ef0295262d4c2f88de3bfe51b52dc4, type: 3}
   m_Name: FirstLevel
   m_EditorClassIdentifier: 
+  Level: {fileID: 5542512448503226910, guid: 33e81b3364c202c40a5a490e3e637b6b, type: 3}
   BottleSpawnPositions:
   - {x: 62.33, y: 0.15, z: 34.85}
   - {x: 67.83, y: 0.15, z: 36.55}

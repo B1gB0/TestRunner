@@ -90,6 +90,13 @@ namespace Game.GameRoot
                 var exitParameters = await observable.FirstAsync();
                 await HandleExitGameplayScene(exitParameters);
             }
+            else
+            {
+                GameplayEnterParameters gameplayEnterParameters =
+                    new GameplayEnterParameters(Scenes.Gameplay);
+
+                await LoadAndStartGameplay(gameplayEnterParameters);
+            }
         }
 
         private async UniTask LoadAndStartGameplay(GameplayEnterParameters enterParameters)
@@ -114,7 +121,6 @@ namespace Game.GameRoot
 
             await LoadAndStartGameplay(gameplayExitParameters
                 .TargetSceneEnterParameters.As<GameplayEnterParameters>());
-
 
             return gameplayExitParameters;
         }

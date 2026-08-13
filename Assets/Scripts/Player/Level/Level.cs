@@ -87,11 +87,11 @@ namespace Player.Level
 
         public virtual async UniTask OnStartLevel()
         {
-            ObstacleSpawner.SpawnObstacles();
+            InitSpawners(_obstacleService);
+            
+            ObstacleSpawner.SpawnObstacles(_levelInitData);
             
             await CreatePlayer();
-
-            InitSpawners(_obstacleService);
         }
 
         protected async UniTask CreatePlayer()
@@ -105,9 +105,6 @@ namespace Player.Level
             var playerCharacteristics = _playerService.InitPlayerCharacteristics(data);
             player.Construct(playerCharacteristics, _particleEffectsService);
 
-            HealthBar = await ViewFactory.CreateHealthBar(player.Health);
-            HealthBar.Show();
-
             var playerTransform = player.transform;
 
             _cinemachineFreeLook.LookAt = playerTransform;
@@ -118,6 +115,10 @@ namespace Player.Level
             _playerService.SpawnPlayer();
             
             _player = player;
+            _player.Health.LoadHealth(ObstacleSpawner.MaxMoney, ObstacleSpawner.CasualMoney);
+            
+            HealthBar = await ViewFactory.CreateHealthBar(player.Health);
+            HealthBar.Show();
 
             foreach (var turnTrigger in _turnTriggers)
             {
