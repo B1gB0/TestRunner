@@ -29,6 +29,8 @@ namespace Game.Gameplay.Root.View
         [field: SerializeField] public Transform HideKeyboardTutorialPoint { get; private set; }
         [field: SerializeField] public Transform ShowHealthPoint { get; private set; }
         [field: SerializeField] public Transform HideHealthPoint { get; private set; }
+        [field: SerializeField] public Transform ShowMoneyPoint { get; private set; }
+        [field: SerializeField] public Transform HideMoneyPoint { get; private set; }
         [field: SerializeField] public Transform WeaponPoint { get; private set; }
         [field: SerializeField] public Joystick Joystick { get; private set; }
         [field: SerializeField] public GameObject JoystickIcon { get; private set; }

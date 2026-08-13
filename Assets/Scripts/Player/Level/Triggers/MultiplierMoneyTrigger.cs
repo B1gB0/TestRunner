@@ -13,7 +13,7 @@ namespace Player.Level.Triggers
 
         private void Start()
         {
-            _text.text = _multiplier.ToString();
+            _text.text = _multiplier + "x";
         }
 
         private void OnTriggerEnter(Collider other)

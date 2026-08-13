@@ -18,16 +18,9 @@ namespace UI.View
 #endif
         private const string HealthBarPath = "HealthBar";
         private const string TextViewPath = "TextView";
+        private const string MoneyViewPath = "MoneyView";
         private const string ShopAttributePanelPath = "ShopAttributePanel";
-        private const string MissionChoosingPanelPath = "MissionChoosingPanel";
         private const string EndGamePanelPath = "EndGamePanel";
-
-        // private const string ProgressRadialBarPath = "ProgressRadialBar";
-        // private const string LevelUpPanelPath = "LevelUpPanel";
-        // private const string EndGamePanelPath = "EndGamePanel";
-        // private const string TimerPath = "Timer";
-        // private const string AdviserMessagePanelPath = "AdviserMessagePanel";
-        // private const string GoldViewPath = "GoldView";
 
         private IResourceService _resourceService;
         private IPlayerService _playerService;
@@ -71,17 +64,6 @@ namespace UI.View
             GameObjectInjector.InjectRecursive(UIScene.gameObject, _container);
         }
 
-        // public async UniTask<Arrow> CreateArrow()
-        // {
-        //     var arrowTemplate = await _resourceService.Load<GameObject>(ArrowPath);
-        //     arrowTemplate = Instantiate(arrowTemplate);
-        //
-        //     Arrow arrow = arrowTemplate.GetComponent<Arrow>();
-        //     arrow.Construct(_playerService.PlayerActor.transform);
-        //
-        //     return arrow;
-        // }
-
         public async UniTask<HealthBar> CreateHealthBar(Health health)
         {
             var healthBarTemplate = await _resourceService.Load<GameObject>(HealthBarPath);
@@ -95,16 +77,6 @@ namespace UI.View
 
             return healthBar;
         }
-
-        // public async UniTask<ProgressRadialBar> CreateProgressBar(ExperiencePoints experiencePoints, Transform target)
-        // {
-        //     var progressRadialBarPlaneTemplate = await _resourceService.Load<GameObject>(ProgressRadialBarPath);
-        //     progressRadialBarPlaneTemplate = Instantiate(progressRadialBarPlaneTemplate);
-        //
-        //     ProgressRadialBar progressRadialBar = progressRadialBarPlaneTemplate.GetComponent<ProgressRadialBar>();
-        //     progressRadialBar.Construct(experiencePoints, target);
-        //     return progressRadialBar;
-        // }
         
         public async UniTask<FloatingTextView> CreateFloatingTextView()
         {
@@ -113,18 +85,6 @@ namespace UI.View
         
             FloatingTextView textView = textViewTemplate.GetComponent<FloatingTextView>();
             return textView;
-        }
-        
-        public async UniTask<MissionChoosingPanel> CreateMissionChoosingPanel()
-        {
-            var missionPanelTemplate = await _resourceService.Load<GameObject>(MissionChoosingPanelPath);
-            missionPanelTemplate = Instantiate(missionPanelTemplate);
-
-            _missionChoosingPanel = missionPanelTemplate.GetComponent<MissionChoosingPanel>();
-            GameObjectInjector.InjectRecursive(_missionChoosingPanel.gameObject, _container);
-            _missionChoosingPanel.transform.SetParent(UIScene.transform, false);
-
-            return _missionChoosingPanel;
         }
         
         public async UniTask<EndGamePanel> CreateEndGamePanel()
@@ -139,118 +99,18 @@ namespace UI.View
 
             return _endGamePanel;
         }
-
-        // public async UniTask<LevelUpPanel> CreateLevelUpPanel()
-        // {
-        //     var levelUpPanelTemplate = await _resourceService.Load<GameObject>(LevelUpPanelPath);
-        //     levelUpPanelTemplate = Instantiate(levelUpPanelTemplate);
-        //
-        //     _levelUpPanel = levelUpPanelTemplate.GetComponent<LevelUpPanel>();
-        //     GameObjectInjector.InjectRecursive(_levelUpPanel.gameObject, _container);
-        //     _levelUpPanel.transform.SetParent(_uiScene.transform);
-        //     _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _levelUpPanel.OnLanguageChanged;
-        //
-        //     return _levelUpPanel;
-        // }
-        //
-        // public async UniTask<EndGamePanel> CreateEndGamePanel()
-        // {
-        //     var endGamePanelTemplate = await _resourceService.Load<GameObject>(EndGamePanelPath);
-        //     endGamePanelTemplate = Instantiate(endGamePanelTemplate);
-        //
-        //     EndGamePanel endGamePanel = endGamePanelTemplate.GetComponent<EndGamePanel>();
-        //     GameObjectInjector.InjectObject(endGamePanel.gameObject, _container);
-        //     endGamePanel.transform.SetParent(_uiScene.transform);
-        //     return endGamePanel;
-        // }
-        //
-        // public async UniTask<Timer> CreateTimer()
-        // {
-        //     var timerTemplate = await _resourceService.Load<GameObject>(TimerPath);
-        //     timerTemplate = Instantiate(timerTemplate);
-        //
-        //     Timer timer = timerTemplate.GetComponent<Timer>();
-        //     GameObjectInjector.InjectObject(timer.gameObject, _container);
-        //     timer.transform.SetParent(_uiScene.transform, false);
-        //     timer.GetPoints(_uiScene.ShowTimerPoint, _uiScene.HideTimerPoint);
-        //     return timer;
-        // }
-        //
-        // public async UniTask<DialoguePanel> CreateDialoguePanel()
-        // {
-        //     var adviserMessagePanelTemplate = await _resourceService.Load<GameObject>(AdviserMessagePanelPath);
-        //     adviserMessagePanelTemplate = Instantiate(adviserMessagePanelTemplate);
-        //
-        //     DialoguePanel dialoguePanel = adviserMessagePanelTemplate.GetComponent<DialoguePanel>();
-        //     GameObjectInjector.InjectObject(dialoguePanel.gameObject, _container);
-        //     dialoguePanel.transform.SetParent(_uiScene.transform, false);
-        //     return dialoguePanel;
-        // }
-        //
-        // public async UniTask<GoldView> CreateGoldView()
-        // {
-        //     var goldViewTemplate = await _resourceService.Load<GameObject>(GoldViewPath);
-        //     goldViewTemplate = Instantiate(goldViewTemplate);
-        //
-        //     GoldView goldView = goldViewTemplate.GetComponent<GoldView>();
-        //     GameObjectInjector.InjectObject(goldView.gameObject, _container);
-        //     goldView.transform.SetParent(_uiScene.transform);
-        //     goldView.GetPoints(_uiScene.ShowGoldPoint, _uiScene.HideGoldPoint);
-        //
-        //     return goldView;
-        // }
-        //
-        // public async UniTask<AlienCocoonView> CreateAlienCocoonView()
-        // {
-        //     var alienCocoonViewTemplate = await _resourceService.Load<GameObject>(AlienCocoonViewPath);
-        //     alienCocoonViewTemplate = Instantiate(alienCocoonViewTemplate);
-        //
-        //     _alienCocoonView = alienCocoonViewTemplate.GetComponent<AlienCocoonView>();
-        //     GameObjectInjector.InjectObject(_alienCocoonView.gameObject, _container);
-        //     _alienCocoonView.transform.SetParent(_uiScene.transform, false);
-        //     _alienCocoonView.GetPoints(_uiScene.ShowAlienCocoonPoint, _uiScene.HideAlienCocoonPoint);
-        //
-        //     return _alienCocoonView;
-        // }
-        //
-        // public async UniTask<MissionProgressBar> CreateMissionProgressBar()
-        // {
-        //     var missionBarTemplate = await _resourceService.Load<GameObject>(MissionProgressBarPath);
-        //     missionBarTemplate = Instantiate(missionBarTemplate);
-        //
-        //     _missionProgressBar = missionBarTemplate.GetComponent<MissionProgressBar>();
-        //     GameObjectInjector.InjectObject(_missionProgressBar.gameObject, _container);
-        //     _missionProgressBar.transform.SetParent(_uiScene.transform, false);
-        //     _missionProgressBar.GetPoints(_uiScene.ShowMissionProgressPoint, _uiScene.HideMissionProgressPoint);
-        //     _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _missionProgressBar.SetText;
-        //     return _missionProgressBar;
-        // }
-        //
-        // public async UniTask<ObjectiveTextView> CreateObjectiveText()
-        // {
-        //     var objectiveTextTemplate = await _resourceService.Load<GameObject>(ObjectiveTextViewPath);
-        //     objectiveTextTemplate = Instantiate(objectiveTextTemplate);
-        //
-        //     _objectiveTextView = objectiveTextTemplate.GetComponent<ObjectiveTextView>();
-        //     GameObjectInjector.InjectObject(_objectiveTextView.gameObject, _container);
-        //     _objectiveTextView.transform.SetParent(_uiScene.transform, false);
-        //     _objectiveTextView.GetPoints(_uiScene.ShowTimerPoint, _uiScene.HideTimerPoint);
-        //     _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _objectiveTextView.SetText;
-        //     return _objectiveTextView;
-        // }
-
-// #if UNITY_EDITOR
-//         public async UniTask<CheatPanel> CreateCheatPanel(ExperiencePoints experiencePoints)
-//         {
-//             var cheatPanelTemplate = await _resourceService.Load<GameObject>(CheatPanelPath);
-//             cheatPanelTemplate = Instantiate(cheatPanelTemplate);
-//
-//             CheatPanel cheatPanel = cheatPanelTemplate.GetComponent<CheatPanel>();
-//             GameObjectInjector.InjectObject(cheatPanel.gameObject, _container);
-//             cheatPanel.GetServices(experiencePoints);
-//             cheatPanel.transform.SetParent(_uiScene.transform);
-//             return cheatPanel;
-//         }
-// #endif
+        
+        public async UniTask<MoneyView> CreateMoneyView()
+        {
+            var moneyViewTemplate = await _resourceService.Load<GameObject>(MoneyViewPath);
+            moneyViewTemplate = Instantiate(moneyViewTemplate);
+        
+            MoneyView moneyView = moneyViewTemplate.GetComponent<MoneyView>();
+            GameObjectInjector.InjectObject(moneyView.gameObject, _container);
+            moneyView.transform.SetParent(UIScene.transform);
+            moneyView.GetPoints(UIScene.ShowMoneyPoint, UIScene.HideMoneyPoint);
+        
+            return moneyView;
+        }
     }
 }

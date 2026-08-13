@@ -32,13 +32,13 @@ namespace Services
 
             foreach (var mission in Missions)
             {
-                foreach (var missionData in _dataBaseService.Content.MissionsLocalization)
-                {
-                    if (mission.Id == missionData.Id)
-                    {
-                        mission.SetData(missionData);
-                    }
-                }
+                // foreach (var missionData in _dataBaseService.Content.MissionsLocalization)
+                // {
+                //     if (mission.Id == missionData.Id)
+                //     {
+                //         mission.SetData(missionData);
+                //     }
+                // }
             }
 
             IsInitiated = true;

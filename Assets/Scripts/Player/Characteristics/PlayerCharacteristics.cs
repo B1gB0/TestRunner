@@ -28,8 +28,6 @@ namespace Player.Characteristics
             TargetHealth = data.Health;
             MoveSpeed = data.MoveSpeed;
             RotationSpeed = data.RotationSpeed;
-            Armor = data.Armor;
-            Damage = data.Damage;
 
             _moveSpeed = data.MoveSpeed;
             _baseMoveSpeed = data.MoveSpeed;
@@ -53,14 +51,6 @@ namespace Player.Characteristics
                 case CharacteristicType.Health:
                     // YG2.saves.HealthAttributeNumber++;
                     IncreaseHealth(factor);
-                    break;
-                case CharacteristicType.Armor:
-                    // YG2.saves.ArmorAttributeNumber++;
-                    IncreaseArmor(factor);
-                    break;
-                case CharacteristicType.Damage:
-                    // YG2.saves.DamageAttributeNumber++;
-                    IncreaseDamage(factor);
                     break;
                 // case CharacteristicType.DiggingSpeed:
                 //     IncreaseDiggingSpeedFactor(factor);
@@ -106,20 +96,6 @@ namespace Player.Characteristics
         {
             MaxHealth += healthValue;
             _playerService.Player.Health.ImproveHealth(healthValue);
-        }
-
-        private void IncreaseArmor(float armorValue)
-        {
-            PlayerData data = _playerService.GetPlayerDataByType(PlayerType.CommonHero);
-
-            Armor = data.Armor + armorValue;
-        }
-
-        private void IncreaseDamage(float damageValue)
-        {
-            PlayerData data = _playerService.GetPlayerDataByType(PlayerType.CommonHero);
-
-            Damage = data.Damage + damageValue;
         }
 
         private void IncreaseDiggingSpeedFactor(float diggingSpeedFactor)

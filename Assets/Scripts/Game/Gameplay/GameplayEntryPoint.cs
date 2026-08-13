@@ -138,7 +138,7 @@ namespace Game.Gameplay
             _uiScene.Bind(exitSceneSignalSubject);
 
             uiRoot.UIStateMachine.EnterIn<GameplayState>();
-            uiRoot.GoldView.Show();
+            uiRoot.MoneyView.Show();
             OnShowJoystickWithAttackButton();
 
             var scene = SceneManager.GetActiveScene();

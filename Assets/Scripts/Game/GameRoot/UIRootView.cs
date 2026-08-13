@@ -21,7 +21,7 @@ namespace Game.GameRoot
         [SerializeField] private SettingsPanel _settingsPanel;
         [SerializeField] private LeaderboardPanel _leaderboardPanel;
         [SerializeField] private LocalizationLanguageSwitcher _localizationLanguageSwitcher;
-        [SerializeField] private GoldView _goldView;
+        [SerializeField] private MoneyView moneyView;
 
         [SerializeField] private Button _settingsButton;
         [SerializeField] private Button _leaderboardButton;
@@ -33,7 +33,7 @@ namespace Game.GameRoot
         public UIRootButtons UIRootButtons => _uiRootButtons;
         public Button SettingsButton => _settingsButton;
         public Button LeaderboardButton => _leaderboardButton;
-        public GoldView GoldView => _goldView;
+        public MoneyView MoneyView => moneyView;
         public LocalizationLanguageSwitcher LocalizationLanguageSwitcher => _localizationLanguageSwitcher;
 
         [Inject]

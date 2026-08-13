@@ -58,8 +58,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSoundsServicePrefab: {fileID: 1081434827416047050, guid: 567029ed7fedcfe45806ada75cfa54cd, type: 3}
-  _playerServicePrefab: {fileID: 0}
+  _playerServicePrefab: {fileID: 4575645111920843343, guid: 735435f2537256c489c3c8cf9f33c235, type: 3}
   _particleEffectsService: {fileID: 8025066812198353854, guid: 79df315e16969924597fb7cb36295ae3, type: 3}
-  _uiRootViewPrefab: {fileID: 0}
-  _gameEntryPointPrefab: {fileID: 0}
-  _missionServicePrefab: {fileID: 0}
+  _uiRootViewPrefab: {fileID: 7385491024677418902, guid: c6ba61368436e3348aa3e115e9cdfb37, type: 3}
+  _gameEntryPointPrefab: {fileID: 8659993878310590178, guid: 8902ba866b64e4a4698afbc9c81e5a8e, type: 3}
+  _missionServicePrefab: {fileID: 1377673561275281836, guid: 2ddc0cf9d16acbb42b77770246390a9d, type: 3}
