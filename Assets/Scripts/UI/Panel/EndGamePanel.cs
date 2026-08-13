@@ -108,7 +108,7 @@ namespace UI.Panel
             YG2.onHideWindowGame += _pauseService.OnStopGameWithMusic;
             
             _experiencePoints.ResetAccumulatedValues();
-            _currencyService.ResetAccumulatedGold();
+            _currencyService.ResetAccumulatedMoney();
             
             _nextLevelButton.onClick.RemoveListener(_pauseService.OnPlayGame);
             _goToVillageButton.onClick.RemoveListener(_pauseService.OnPlayGame);

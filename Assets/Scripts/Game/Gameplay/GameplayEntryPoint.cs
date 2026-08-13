@@ -156,7 +156,7 @@ namespace Game.Gameplay
             else
             {
                 YG2.SaveProgress();
-                _currencyService.SaveGold();
+                _currencyService.SaveMoney();
             }
 
             _playerService.Player.Health.Die += _uiScene.ResetCountdownTutorialPointer;

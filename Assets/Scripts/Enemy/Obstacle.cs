@@ -81,7 +81,7 @@ namespace Enemy
         public void AcceptScore(IScoreActorVisitor visitor)
         {
             visitor.Visit(this);
-            CurrencyService.AddGold(Data.Money);
+            CurrencyService.AddMoney(Data.Money);
         }
 
         public virtual void OnReactState(bool isEnteredToState)

@@ -17,20 +17,5 @@ namespace Player.Animation
         {
             Animator.SetFloat(PlayerAnimationId.Run, speed);
         }
-
-        public void OnAttack(bool isAttacking)
-        {
-            Animator.SetBool(PlayerAnimationId.Attack, isAttacking);
-        }
-
-        public void OnComboChanged(int step)
-        {
-            Animator.SetInteger(PlayerAnimationId.ComboStep, step);
-        }
-
-        public void OnRoll()
-        {
-            Animator.SetTrigger(PlayerAnimationId.Roll);
-        }
     }
 }

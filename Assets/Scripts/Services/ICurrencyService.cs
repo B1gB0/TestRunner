@@ -9,9 +9,9 @@ namespace Services
         public int Money { get; }
         public int AccumulatedMoney { get; }
 
-        public void AddGold(int gold);
-        public void SpendGold(int gold);
-        public void ResetAccumulatedGold();
-        public void SaveGold();
+        public void AddMoney(int gold);
+        public void SpendMoney(int gold);
+        public void ResetAccumulatedMoney();
+        public void SaveMoney();
     }
 }

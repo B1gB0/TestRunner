@@ -11,8 +11,10 @@ namespace Services
         private const int MinValue = 0;
 
         public event Action<int> OnGoldValueChanged;
+        public event Action<int> OnKeysChanged;
 
         public int Money { get; private set; }
+        public int Keys { get; private set; }
         public int AccumulatedMoney { get; private set; }
         public bool IsInitiated { get; private set; }
 
@@ -35,25 +37,42 @@ namespace Services
             OnGoldValueChanged?.Invoke(Money);
         }
 
-        public void AddGold(int gold)
+        public void SetKeys(int keys)
+        {
+            Keys = keys;
+        }
+
+        public void AddKeys(int keys)
+        {
+            Keys += keys;
+            OnKeysChanged?.Invoke(Keys);
+        }
+
+        public void AddMoney(int gold)
         {
             Money += gold;
             AccumulatedMoney += gold;
             OnGoldValueChanged?.Invoke(Money);
         }
 
-        public void SpendGold(int gold)
+        public void SpendMoney(int gold)
         {
             Money -= gold;
             OnGoldValueChanged?.Invoke(Money);
         }
+
+        public void SpendKeys(int keys)
+        {
+            Keys -= keys;
+            OnKeysChanged?.Invoke(Keys);
+        }
         
-        public void ResetAccumulatedGold()
+        public void ResetAccumulatedMoney()
         {
             AccumulatedMoney = MinValue;
         }
 
-        public void SaveGold()
+        public void SaveMoney()
         {
             YG2.saves.Money = Money;
             YG2.SaveProgress();
