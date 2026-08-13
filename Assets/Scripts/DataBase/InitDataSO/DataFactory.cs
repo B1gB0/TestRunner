@@ -18,9 +18,9 @@ namespace DataBase.InitDataSO
             _resourceService = resourceService;
         }
 
-        public async UniTask<EnemyInitData> CreateSkeletonInitData()
+        public async UniTask<ObstacleInitData> CreateSkeletonInitData()
         {
-            var skeletonData = await _resourceService.Load<EnemyInitData>(EnemyInitData);
+            var skeletonData = await _resourceService.Load<ObstacleInitData>(EnemyInitData);
             return skeletonData;
         }
         

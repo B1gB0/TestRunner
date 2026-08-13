@@ -31,6 +31,11 @@ namespace Player.Level.Spawners
             _particleEffectsService = particleEffectsService;
         }
 
+        public void SpawnObstacles()
+        {
+            
+        }
+
         public void SpawnWave(EnemyWave wave)
         {
             List<Vector3> spawnPoints = wave.WaveSpawnPoints;

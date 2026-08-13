@@ -87,6 +87,8 @@ namespace Player.Level
 
         public virtual async UniTask OnStartLevel()
         {
+            ObstacleSpawner.SpawnObstacles();
+            
             await CreatePlayer();
 
             InitSpawners(_obstacleService);

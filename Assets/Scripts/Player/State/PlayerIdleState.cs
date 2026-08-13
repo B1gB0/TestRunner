@@ -17,7 +17,7 @@ namespace Player.State
 
         public void Enter()
         {
-            _player.PlayerAnimatedState.OnMove(0f);
+            _player.PlayerAnimatedState.OnIdle(0f);
         }
 
         public void Update()

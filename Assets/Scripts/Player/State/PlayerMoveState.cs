@@ -68,7 +68,6 @@ namespace Player.State
 
         public void Exit()
         {
-            _playerAnimatedState.OnMove(0f);
             _isTurning = false;
         }
 

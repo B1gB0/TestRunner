@@ -15,7 +15,17 @@ namespace Player.Animation
 
         public void OnMove(float speed)
         {
-            Animator.SetFloat(PlayerAnimationId.Run, speed);
+            Animator.CrossFade(PlayerAnimationId.Run, 1f);
+        }
+        
+        public void OnDance(float speed)
+        {
+            Animator.CrossFade(PlayerAnimationId.Dance, 1f);
+        }
+        
+        public void OnIdle(float speed)
+        {
+            Animator.CrossFade(PlayerAnimationId.Idle, 1f);
         }
     }
 }

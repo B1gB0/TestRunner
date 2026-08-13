@@ -10,20 +10,14 @@ namespace Services
 {
     public class ObstacleService : IObstacleService
     {
-        private const string SkeletonPool = nameof(SkeletonPool);
-        private const string SkeletonHeavyArmorPool = nameof(SkeletonHeavyArmorPool);
-        private const string SkeletonRangerPool = nameof(SkeletonRangerPool);
-        private const string PriestPool = nameof(PriestPool);
-        private const string BanditPool = nameof(BanditPool);
-        private const string BanditRangerPool = nameof(BanditRangerPool);
-        private const string ArrowProjectilePool = nameof(ArrowProjectilePool);
-        private const string MagicBallProjectilePool = nameof(MagicBallProjectilePool);
+        private const string MoneyPool = nameof(MoneyPool);
+        private const string BottlePool = nameof(BottlePool);
 
         private const bool IsAutoExpand = true;
         private const int MinValue = 0;
         private const int DefaultCountObjectsInPool = 3;
 
-        private readonly Dictionary<ObstacleType, ObstacleData> _enemiesData = new();
+        private readonly Dictionary<ObstacleType, ObstacleData> _obstaclesData = new();
 
         private IDataBaseService _dataBaseService;
         private IPlayerService _playerService;
@@ -33,7 +27,10 @@ namespace Services
         // private IExperiencePoints _experiencePoints;
         private ICurrencyService _currencyService;
 
-        private EnemyInitData _enemyInitData;
+        private ObstacleInitData _obstacleInitData;
+        
+        private ObjectPool<Bottle> _bottlePool;
+        private ObjectPool<Money> _moneyPool;
 
         public bool IsInitiated { get; private set; }
 
@@ -63,7 +60,7 @@ namespace Services
 
             foreach (var enemy in _dataBaseService.Content.Obstacles)
             {
-                _enemiesData.TryAdd(enemy.Type, enemy);
+                _obstaclesData.TryAdd(enemy.Type, enemy);
             }
 
             IsInitiated = true;
@@ -71,9 +68,73 @@ namespace Services
             return UniTask.CompletedTask;
         }
         
-        public void GetData(EnemyInitData enemyInitData)
+        public void GetData(ObstacleInitData obstacleInitData)
         {
-            _enemyInitData = enemyInitData;
+            _obstacleInitData = obstacleInitData;
+        }
+        
+        public Bottle CreateBottle()
+        {
+            CreateBottlePool();
+
+            var data = _obstaclesData[ObstacleType.Bottle];
+            var bottle = _bottlePool.GetFreeElement();
+
+            bottle.Construct(
+                _playerService.Player,
+                data,
+                _floatingTextService,
+                _particleEffectsService,
+                _audioSoundsService,
+                _currencyService);
+
+            return bottle;
+        }
+        
+        public Money CreateMoney()
+        {
+            CreateMoneyPool();
+
+            var data = _obstaclesData[ObstacleType.Money];
+            var money = _moneyPool.GetFreeElement();
+
+            money.Construct(
+                _playerService.Player,
+                data,
+                _floatingTextService,
+                _particleEffectsService,
+                _audioSoundsService,
+                _currencyService);
+
+            return money;
+        }
+        
+        private void CreateBottlePool()
+        {
+            if (_bottlePool != null)
+                return;
+
+            _bottlePool = new ObjectPool<Bottle>(
+                _obstacleInitData.BottlePrefab,
+                DefaultCountObjectsInPool,
+                new GameObject(BottlePool).transform)
+            {
+                AutoExpand = IsAutoExpand,
+            };
+        }
+        
+        private void CreateMoneyPool()
+        {
+            if (_moneyPool != null)
+                return;
+
+            _moneyPool = new ObjectPool<Money>(
+                _obstacleInitData.MoneyPrefab,
+                DefaultCountObjectsInPool,
+                new GameObject(MoneyPool).transform)
+            {
+                AutoExpand = IsAutoExpand,
+            };
         }
     }
 }

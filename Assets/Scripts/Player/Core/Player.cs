@@ -13,6 +13,13 @@ namespace Player.Core
         [field: SerializeField] public Health Health { get; private set; }
         [field: SerializeField] public PlayerCollisionHandler PlayerCollisionHandler { get; private set; }
 
+        [SerializeField] private GameObject _blinq;
+        [SerializeField] private GameObject _buisiness;
+        [SerializeField] private GameObject _casual;
+        [SerializeField] private GameObject _middle;
+        [SerializeField] private GameObject _coctail;
+        [SerializeField] private GameObject _poor;
+
         private ParticleEffectsService _particleEffectsService;
 
         private Animator _animator;

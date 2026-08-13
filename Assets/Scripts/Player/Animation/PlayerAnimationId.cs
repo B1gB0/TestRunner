@@ -6,5 +6,6 @@ namespace Player.Animation
     {
         public readonly int Idle = Animator.StringToHash(nameof(Idle));
         public readonly int Run = Animator.StringToHash(nameof(Run));
+        public readonly int Dance = Animator.StringToHash(nameof(Dance));
     }
 }

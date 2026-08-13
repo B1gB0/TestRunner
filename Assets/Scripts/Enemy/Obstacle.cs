@@ -24,9 +24,7 @@ namespace Enemy
         private bool _isDead;
 
         public event Action<Obstacle> Die;
-
-        [field: SerializeField] public Health Health { get; private set; }
-        [field: SerializeField] public EnemyStateMachine EnemyStateMachine { get; private set; }
+        
         [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
         [field: SerializeField] public Collider Collider { get; private set; }
         
@@ -44,14 +42,14 @@ namespace Enemy
 
         private void OnEnable()
         {
-            Health.Die += OnDie;
-            Health.IsDamaged += OnPlayHitEffect;
+            // Health.Die += OnDie;
+            // Health.IsDamaged += OnPlayHitEffect;
         }
 
         private void OnDisable()
         {
-            Health.Die -= OnDie;
-            Health.IsDamaged -= OnPlayHitEffect;
+            // Health.Die -= OnDie;
+            // Health.IsDamaged -= OnPlayHitEffect;
         }
 
         public void Construct(
@@ -60,7 +58,6 @@ namespace Enemy
             IFloatingTextService floatingTextService,
             ParticleEffectsService particleEffectsService,
             AudioSoundsService audioSoundsService,
-            IExperiencePoints experiencePoints,
             ICurrencyService currencyService)
         {
             Player = player;
@@ -72,10 +69,7 @@ namespace Enemy
             FloatingTextService = floatingTextService;
             ParticleEffectsService = particleEffectsService;
             AudioSoundsService = audioSoundsService;
-            ExperiencePoints = experiencePoints;
             CurrencyService = currencyService;
-
-            Health.IsSpawnedDamageText += FloatingTextService.OnSpawnFloatingText;
         }
 
         public void AcceptScore(IScoreActorVisitor visitor)
@@ -88,29 +82,17 @@ namespace Enemy
         {
         }
 
-        public void ForceKill()
-        {
-            if (_isDead || Health == null) return;
-
-            if (Health.TargetHealth > 0f)
-                Health.TakeDamage(Health.MaxHealth);
-            else
-                OnDie();
-        }
-
         protected virtual void OnDie()
         {
             if (_isDead) return;
             _isDead = true;
-            
-            Health.IsSpawnedDamageText -= FloatingTextService.OnSpawnFloatingText;
 
             Die?.Invoke(this);
         }
 
         protected virtual void OnPlayHitEffect()
         {
-            ParticleEffectsService.PlayEffect(ParticleType.BasicHit, Health.HitPoint.position);
+            ParticleEffectsService.PlayEffect(ParticleType.BasicHit, transform.position);
         }
     }
 }

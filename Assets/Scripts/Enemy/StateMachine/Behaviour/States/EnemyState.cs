@@ -13,8 +13,7 @@ namespace Enemy.StateMachine.Behaviour.States
         protected Obstacle Obstacle;
         protected ParticleEffectsService ParticleEffectsService;
         protected AudioSoundsService AudioSoundsService;
-
-        protected EnemyStateMachine EnemyStateMachine => Obstacle.EnemyStateMachine;
+        
         protected EnemyAnimatedStateMachine AnimStateMachine => Obstacle.AnimatedStateMachine;
         protected Player.Core.Player Player => Obstacle.Player;
         protected ObstacleData Data => Obstacle.Data;

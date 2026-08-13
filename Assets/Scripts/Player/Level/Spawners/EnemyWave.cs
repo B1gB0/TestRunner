@@ -31,17 +31,6 @@ namespace Player.Level.Spawners
             obstacle.Die += RemoveEnemy;
         }
 
-        public void KillEnemies()
-        {
-            var snapshot = new List<Enemy.Obstacle>(Enemies);
-            foreach (var enemy in snapshot)
-            {
-                enemy.ForceKill();
-            }
-
-            Enemies.Clear();
-        }
-
         private void RemoveEnemy(Enemy.Obstacle obstacle)
         {
             Enemies.Remove(obstacle);

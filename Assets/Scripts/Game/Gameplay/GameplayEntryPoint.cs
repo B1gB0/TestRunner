@@ -49,7 +49,7 @@ namespace Game.Gameplay
         private IPauseService _pauseService;
         private ICurrencyService _currencyService;
 
-        private EnemyInitData _enemyInitData;
+        private ObstacleInitData _obstacleInitData;
         private PlayerInitData _playerInitData;
 
         private EndGamePanel _endGamePanel;
@@ -117,7 +117,7 @@ namespace Game.Gameplay
             _level = FindObjectOfType<Level>();
             GameObjectInjector.InjectObject(_level.gameObject, _container);
 
-            _obstacleService.GetData(_enemyInitData);
+            _obstacleService.GetData(_obstacleInitData);
 
             _level.GetDependencies(
                 _levelInitData,
@@ -208,7 +208,7 @@ namespace Game.Gameplay
         private async UniTask InitData()
         {
             _levelInitData = Instantiate(_levelInitData);
-            _enemyInitData = await _dataFactory.CreateSkeletonInitData();
+            _obstacleInitData = await _dataFactory.CreateSkeletonInitData();
             _playerInitData = await _dataFactory.CreatePlayerInitData();
         }
 
