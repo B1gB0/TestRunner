@@ -103,9 +103,9 @@ namespace Services
             FreeLookCamera = freeLookCamera;
         }
         
-        public void GetJoystickWithAttackButton(Joystick joystick, Button attackButton, Button rollButton)
+        public void GetJoystickWithAttackButton(Joystick joystick)
         {
-            Player.InputController.GetJoystickWithAttackButton(joystick, attackButton, rollButton);
+            Player.InputController.GetJoystickWithAttackButton(joystick);
         }
     }
 }

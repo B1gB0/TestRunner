@@ -30,7 +30,7 @@ namespace Game.Gameplay
         [SerializeField] private DataFactory _dataFactory;
         [SerializeField] private LevelInitData _levelInitData;
         [SerializeField] private ViewFactory _viewFactory;
-        
+
 
         private Level _level;
         private UIRootView _uiRoot;
@@ -84,26 +84,26 @@ namespace Game.Gameplay
             GameplayEnterParameters enterParameters = null)
         {
             _container = gameObject.scene.GetSceneContainer();
-        
+
             _uiRoot = uiRoot;
-        
+
             await _particleEffectsService.Init();
-        
+
             _uiScene = Instantiate(_sceneUIRootPrefab);
-        
+
             _viewFactory.GetEntities(uiRoot, _uiScene, _container, this);
-        
+
             uiRoot.AttachSceneUI(_uiScene.gameObject);
-        
+
             GameObjectInjector.InjectRecursive(uiRoot.gameObject, _container);
-        
+
             _uiScene.GetUIStateMachine(uiRoot.UIStateMachine, _uiRoot.UIRootButtons);
-        
+
             // uiRoot.ExitPanel.OnExitToMainMenu += GetMainMenuExitParameters;
             // uiRoot.ExitPanel.OnExitToMainMenu += _uiScene.HandleGoToNextSceneButtonClick;
-        
+
             await InitData();
-        
+
             await _dataBaseService.Init();
             await _enemyService.Init();
             await _playerService.Init();
@@ -111,14 +111,14 @@ namespace Game.Gameplay
             await _missionService.Init();
             await _uiLocalizationService.Init();
             await _currencyService.Init();
-        
+
             _playerService.GetSceneObjects(_container, _freeLookCamera);
-        
+
             _level = FindObjectOfType<Level>();
             GameObjectInjector.InjectObject(_level.gameObject, _container);
-        
+
             _enemyService.GetData(_enemyInitData);
-        
+
             _level.GetDependencies(
                 _levelInitData,
                 _playerInitData,
@@ -126,23 +126,23 @@ namespace Game.Gameplay
                 _viewFactory,
                 _uiRoot.UIStateMachine,
                 _uiRoot);
-        
+
             FloatingTextView floatingTextView = await _viewFactory.CreateFloatingTextView();
             floatingTextView.Deactivate();
-        
+
             _floatingTextService.Init(floatingTextView);
-        
+
             await _level.OnStartLevel();
-        
+
             var exitSceneSignalSubject = new Subject<Unit>();
             _uiScene.Bind(exitSceneSignalSubject);
-        
+
             uiRoot.UIStateMachine.EnterIn<GameplayState>();
             uiRoot.GoldView.Show();
             OnShowJoystickWithAttackButton();
-        
+
             var scene = SceneManager.GetActiveScene();
-        
+
             if (scene.name == Scenes.Gameplay)
             {
                 _endGamePanel = await _viewFactory.CreateEndGamePanel();
@@ -158,24 +158,23 @@ namespace Game.Gameplay
                 YG2.SaveProgress();
                 _currencyService.SaveGold();
             }
-        
+
             _playerService.Player.Health.Die += _uiScene.ResetCountdownTutorialPointer;
             _playerService.Player.InputController.OnMoveButtonsPressed += _uiScene.ResetCountdownTutorialPointer;
             uiRoot.SettingsButton.onClick.AddListener(_playerService.Player.InputController.LockPlayerMovement);
             uiRoot.LeaderboardButton.onClick.AddListener(_playerService.Player.InputController.LockPlayerMovement);
-        
+
             var exitToSceneSignal = exitSceneSignalSubject.Select(_ => _exitParameters);
-        
+
             _uiScene.ResetCountdownTutorialPointer();
-            _uiScene.HandlePCTutorialButtons();
-        
+
             return exitToSceneSignal;
         }
 
         private void OnDestroy()
         {
             var scene = SceneManager.GetActiveScene();
-            
+
             if (scene.name == Scenes.Gameplay)
             {
                 _endGamePanel.GoToVillageButton.onClick.RemoveListener(_uiScene.HandleGoToNextScene);
@@ -217,10 +216,8 @@ namespace Game.Gameplay
 
         private void OnShowJoystickWithAttackButton()
         {
-            _playerService.GetJoystickWithAttackButton(_uiScene.Joystick, _uiScene.AttackButton, _uiScene.RollButton);
+            _playerService.GetJoystickWithAttackButton(_uiScene.Joystick);
             _uiScene.Joystick.gameObject.SetActive(!YG2.envir.isDesktop);
-            _uiScene.AttackButton.gameObject.SetActive(!YG2.envir.isDesktop);
-            _uiScene.RollButton.gameObject.SetActive(!YG2.envir.isDesktop);
         }
     }
 }

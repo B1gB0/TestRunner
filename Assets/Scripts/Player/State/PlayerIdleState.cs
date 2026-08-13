@@ -22,18 +22,6 @@ namespace Player.State
 
         public void Update()
         {
-            if (_player.InputController.IsAttackButtonPressed)
-            {
-                _stateMachine.SwitchState(StateId.Attack);
-                return;
-            }
-
-            if (_player.InputController.IsRollInputPerformed)
-            {
-                _stateMachine.SwitchState(StateId.Roll);
-                return;
-            }
-
             if (_player.InputController.IsMoveInputPerformed)
             {
                 _stateMachine.SwitchState(StateId.Move);

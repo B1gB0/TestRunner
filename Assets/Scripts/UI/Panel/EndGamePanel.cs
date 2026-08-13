@@ -25,7 +25,7 @@ namespace UI.Panel
 
         [SerializeField] private Button _goToVillageButton;
         [SerializeField] private Button _rebornPlayerButton;
-        // [SerializeField] private Button _nextLevelButton;
+        [SerializeField] private Button _nextLevelButton;
 
         [SerializeField] private List<Image> _images;
         [SerializeField] private GameObject _rootWindow;
@@ -38,14 +38,13 @@ namespace UI.Panel
         private IPlayerService _playerService;
         private IExperiencePoints _experiencePoints;
         
-        // private WeaponPanel _weaponPanel;
         private UILocalizationData _uiLocalizationData;
 
         public event Action OnRewardAdSuccessShowed;
         public event Action OnSpawnPlayer;
 
         public Button GoToVillageButton => _goToVillageButton;
-        // public Button NextLevelButton => _nextLevelButton;
+        public Button NextLevelButton => _nextLevelButton;
 
         [Inject]
         public void Construct(
@@ -84,7 +83,7 @@ namespace UI.Panel
             YG2.onShowWindowGame -= _pauseService.OnPlayGame;
             YG2.onHideWindowGame -= _pauseService.OnStopGameWithMusic;
             
-            // _nextLevelButton.onClick.AddListener(_pauseService.OnPlayGame);
+            _nextLevelButton.onClick.AddListener(_pauseService.OnPlayGame);
             _goToVillageButton.onClick.AddListener(_pauseService.OnPlayGame);
             
 #if UNITY_EDITOR
@@ -111,7 +110,7 @@ namespace UI.Panel
             _experiencePoints.ResetAccumulatedValues();
             _currencyService.ResetAccumulatedGold();
             
-            // _nextLevelButton.onClick.RemoveListener(_pauseService.OnPlayGame);
+            _nextLevelButton.onClick.RemoveListener(_pauseService.OnPlayGame);
             _goToVillageButton.onClick.RemoveListener(_pauseService.OnPlayGame);
             
 #if UNITY_EDITOR
@@ -127,23 +126,21 @@ namespace UI.Panel
             if (_missionService.CurrentNumberLevel ==
                 _missionService.CurrentMission.Maps.Count - CountCorrectFactor)
             {
-                // _nextLevelButton.gameObject.SetActive(false);
+                _nextLevelButton.gameObject.SetActive(false);
 
                 switch (_missionService.CurrentMission.Id)
                 {
                     case Missions.Graveyard:
-                        // YG2.saves.IsBanditVillageUnlock = true;
-                        // YG2.SaveProgress();
+                        YG2.SaveProgress();
                         break;
                     case Missions.BanditVillage:
-                        // YG2.saves.IsCastleUnlock = true;
-                        // YG2.SaveProgress();
+                        YG2.SaveProgress();
                         break;
                 }
             }
             else
             {
-                // _nextLevelButton.gameObject.SetActive(true);
+                _nextLevelButton.gameObject.SetActive(true);
             }
 
             _rebornPlayerButton.gameObject.SetActive(false);
@@ -156,7 +153,7 @@ namespace UI.Panel
         public void SetDefeatPanel()
         {
             _rebornPlayerButton.gameObject.SetActive(true);
-            // _nextLevelButton.gameObject.SetActive(false);
+            _nextLevelButton.gameObject.SetActive(false);
 
             SetLocalizationData(UITextType.DefeatPanelTitle);
 
@@ -169,14 +166,12 @@ namespace UI.Panel
             _accumulatedKillsText.text = _experiencePoints.AccumulatedKills.ToString();
             _accumulatedScoreText.text = _experiencePoints.AccumulatedScore.ToString();
             
-            // _weaponPanel.Hide();
             _tweenAnimationService.AnimateScale(transform);
         }
 
         public void Hide()
         {
             _tweenAnimationService.AnimateScale(transform, true);
-            // _weaponPanel.Show();
         }
 
         public void SetLabelText()
@@ -184,19 +179,18 @@ namespace UI.Panel
             if (_uiLocalizationData == null)
                 return;
 
-            // _labelText.text = YG2.lang switch
-            // {
-            //     LocalizationCode.Ru => _uiLocalizationData.NameRu,
-            //     LocalizationCode.En => _uiLocalizationData.NameEn,
-            //     LocalizationCode.Tr => _uiLocalizationData.NameTr,
-            //     _ => _labelText.text
-            // };
+            _labelText.text = YG2.lang switch
+            {
+                LocalizationCode.Ru => _uiLocalizationData.NameRu,
+                LocalizationCode.En => _uiLocalizationData.NameEn,
+                LocalizationCode.Tr => _uiLocalizationData.NameTr,
+                _ => _labelText.text
+            };
         }
 
         public void GetServices(ExperiencePoints experiencePoints)
         {
             _experiencePoints = experiencePoints;
-            // _weaponPanel = weaponPanel;
         }
 
         private void SetLocalizationData(UITextType type)
@@ -234,7 +228,7 @@ namespace UI.Panel
         private void OnShowRewardAd()
         {
             _pauseService.DisableEventSystem();
-            // YG2.RewardedAdvShow(RewardAdRebornId, OnRewardAdSuccessShowed);
+            YG2.RewardedAdvShow(RewardAdRebornId, OnRewardAdSuccessShowed);
         }
     }
 }
