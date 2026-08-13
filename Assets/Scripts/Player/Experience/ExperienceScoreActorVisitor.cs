@@ -24,10 +24,6 @@ namespace Player.Experience
 
         public void Visit(IExperienceScoreActor experienceScoreActor)
         {
-            AccumulatedExperience += experienceScoreActor.Experience;
-            AccumulatedScore += experienceScoreActor.Score;
-            // YG2.saves.AcumulatedScore += experienceScoreActor.Score;
-        
             if (experienceScoreActor.IsEnemy)
             {
                 AccumulatedEnemyKills++;

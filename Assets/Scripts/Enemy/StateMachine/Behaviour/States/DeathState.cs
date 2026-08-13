@@ -33,17 +33,17 @@ namespace Enemy.StateMachine.Behaviour.States
                 Agent.enabled = false;
             }
 
-            foreach (var col in Enemy.GetComponentsInChildren<Collider>())
+            foreach (var col in Obstacle.GetComponentsInChildren<Collider>())
                 col.enabled = false;
 
-            var rb = Enemy.GetComponent<Rigidbody>();
+            var rb = Obstacle.GetComponent<Rigidbody>();
             if (rb != null)
                 rb.isKinematic = true;
             
             AnimStateMachine.EnterIn<DeathAnimatedState>();
             
             _dissolveRenderers.Clear();
-            foreach (var rend in Enemy.GetComponentsInChildren<Renderer>())
+            foreach (var rend in Obstacle.GetComponentsInChildren<Renderer>())
             {
                 if (rend.sharedMaterial.HasProperty(DissolveAmountID))
                     _dissolveRenderers.Add(rend);
@@ -77,14 +77,14 @@ namespace Enemy.StateMachine.Behaviour.States
                 if (progress >= 1f && !_deathProcessed)
                 {
                     _deathProcessed = true;
-                    Enemy.gameObject.SetActive(false);
+                    Obstacle.gameObject.SetActive(false);
                 }
             }
             
             if (_deathTimer <= 0f && !_deathProcessed)
             {
                 _deathProcessed = true;
-                Enemy.gameObject.SetActive(false);
+                Obstacle.gameObject.SetActive(false);
             }
         }
 

@@ -5,6 +5,7 @@ namespace YG
     public partial class SavesYG
     {
         public bool IsFirstLaunch = true;
+        public int Money;
         
         public List<string> stringKeys = new List<string>();
         public List<string> stringValues = new List<string>();

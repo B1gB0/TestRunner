@@ -1,5 +1,4 @@
 ﻿using System;
-using _Project.Scripts.Level;
 using Game.Constant;
 using Player.Level;
 using TMPro;

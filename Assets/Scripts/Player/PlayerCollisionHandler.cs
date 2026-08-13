@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using _Project.Scripts.Level.Spawners;
-using _Project.Scripts.Level.Triggers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Player
 {
@@ -11,8 +7,6 @@ namespace Player
     {
         private Core.Player _player;
 
-        public List<EnemyWave> EnemyWaves { get; private set; }
-
         private void Awake()
         {
             _player = GetComponent<Core.Player>();
@@ -20,14 +14,6 @@ namespace Player
 
         private void OnTriggerEnter(Collider trigger)
         {
-            if (trigger.TryGetComponent(out EnemyWaveFollowTrigger followTrigger))
-            {
-                foreach (var enemy in followTrigger.NumberWaveOfEnemies.SelectMany(number => EnemyWaves[number].Enemies))
-                {
-                    enemy.ChangeFollowEnemyState(true);
-                }
-            }
-            
             // if (trigger.TryGetComponent(out EntranceTrigger entranceTrigger))
             // {
             //     entranceTrigger.Entrance.OpenGate();
@@ -57,10 +43,5 @@ namespace Player
         //         goldCrystal.Destroy();
         //     }
         // }
-
-        public void GetEnemyWaves(List<EnemyWave> enemyWaves)
-        {
-            EnemyWaves = enemyWaves;
-        }
     }
 }

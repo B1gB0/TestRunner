@@ -162,7 +162,7 @@ namespace UI.Panel
 
         public void Show()
         {
-            _accumulatedGoldText.text = _currencyService.AccumulatedGold.ToString();
+            _accumulatedGoldText.text = _currencyService.AccumulatedMoney.ToString();
             _accumulatedKillsText.text = _experiencePoints.AccumulatedKills.ToString();
             _accumulatedScoreText.text = _experiencePoints.AccumulatedScore.ToString();
             

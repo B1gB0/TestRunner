@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Services
 {
-    public class EnemyService : IEnemyService
+    public class ObstacleService : IObstacleService
     {
         private const string SkeletonPool = nameof(SkeletonPool);
         private const string SkeletonHeavyArmorPool = nameof(SkeletonHeavyArmorPool);
@@ -23,7 +23,7 @@ namespace Services
         private const int MinValue = 0;
         private const int DefaultCountObjectsInPool = 3;
 
-        private readonly Dictionary<EnemyType, EnemyData> _enemiesData = new();
+        private readonly Dictionary<ObstacleType, ObstacleData> _enemiesData = new();
 
         private IDataBaseService _dataBaseService;
         private IPlayerService _playerService;
@@ -61,7 +61,7 @@ namespace Services
             if (IsInitiated)
                 return UniTask.CompletedTask;
 
-            foreach (var enemy in _dataBaseService.Content.Enemies)
+            foreach (var enemy in _dataBaseService.Content.Obstacles)
             {
                 _enemiesData.TryAdd(enemy.Type, enemy);
             }

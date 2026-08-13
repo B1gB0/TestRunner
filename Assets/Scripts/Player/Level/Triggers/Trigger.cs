@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace _Project.Scripts.Level.Triggers
+namespace Player.Level.Triggers
 {
     public class Trigger : MonoBehaviour
     {

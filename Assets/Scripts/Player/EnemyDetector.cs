@@ -8,7 +8,7 @@ namespace Player
     {
         private const int MinValue = 0;
 
-        private readonly HashSet<Enemy.Enemy> _enemiesInRange = new ();
+        private readonly HashSet<Enemy.Obstacle> _enemiesInRange = new ();
 
         private float _closestEnemyDistanceSqr;
 
@@ -16,7 +16,7 @@ namespace Player
 
         private void OnTriggerEnter(Collider otherCollider)
         {
-            if (!otherCollider.TryGetComponent(out Enemy.Enemy enemy))
+            if (!otherCollider.TryGetComponent(out Enemy.Obstacle enemy))
                 return;
 
             _enemiesInRange.Add(enemy);
@@ -26,7 +26,7 @@ namespace Player
 
         private void OnTriggerExit(Collider otherCollider)
         {
-            if (!otherCollider.TryGetComponent(out Enemy.Enemy enemy))
+            if (!otherCollider.TryGetComponent(out Enemy.Obstacle enemy))
                 return;
 
             _enemiesInRange.Remove(enemy);
@@ -44,16 +44,16 @@ namespace Player
             _enemiesInRange.Clear();
         }
 
-        public Enemy.Enemy GetClosestEnemy()
+        public Enemy.Obstacle GetClosestEnemy()
         {
             if (_enemiesInRange.Count <= MinValue)
                 return null;
 
-            Enemy.Enemy bestTarget = null;
+            Enemy.Obstacle bestTarget = null;
             _closestEnemyDistanceSqr = Mathf.Infinity;
             var currentPosition = transform.position;
 
-            foreach (Enemy.Enemy closestEnemy in _enemiesInRange)
+            foreach (Enemy.Obstacle closestEnemy in _enemiesInRange)
             {
                 var directionToTarget = closestEnemy.transform.position - currentPosition;
                 var dSqrToTarget = directionToTarget.sqrMagnitude;
@@ -68,15 +68,15 @@ namespace Player
             return bestTarget;
         }
 
-        public HashSet<Enemy.Enemy> GetEnemiesInRange()
+        public HashSet<Enemy.Obstacle> GetEnemiesInRange()
         {
             return _enemiesInRange;
         }
 
-        private void OnEnemyDie(Enemy.Enemy enemy)
+        private void OnEnemyDie(Enemy.Obstacle obstacle)
         {
-            _enemiesInRange.Remove(enemy);
-            enemy.Die -= OnEnemyDie;
+            _enemiesInRange.Remove(obstacle);
+            obstacle.Die -= OnEnemyDie;
         }
     }
 }

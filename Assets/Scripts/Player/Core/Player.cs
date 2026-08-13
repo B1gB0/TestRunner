@@ -78,9 +78,9 @@ namespace Player.Core
                 Health.TargetHealthChanged += PlayerCharacteristics.SaveTargetHealth;
         }
 
-        public void ChangeFollowEnemyState(bool canFollow)
+        public void StartTurn(float angle)
         {
-            CanFollow = canFollow;
+            _playerMoveState.StartTurn(angle);
         }
 
         private void OnPlayHitEffect()

@@ -9,9 +9,8 @@ namespace DataBase
     public class SpreadsheetContent
     {
         [SpreadsheetPage("Players")] public List<PlayerData> Players;
-        [SpreadsheetPage("Enemies")] public List<EnemyData> Enemies;
-
-        [SpreadsheetPage("GraveyardSceneLevels")] public List<SceneLevelData> GraveyardSceneLevels;
+        [SpreadsheetPage("Obstacles")] public List<ObstacleData> Obstacles;
+        
         [SpreadsheetPage("MissionLocalization")] public List<MissionLocalizationData> MissionsLocalization;
         
         [SpreadsheetPage("UILocalization")] public List<UILocalizationData> UILocalizationData;

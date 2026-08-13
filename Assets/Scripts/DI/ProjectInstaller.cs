@@ -45,7 +45,7 @@ namespace DI
             RegisterTypeWithContracts<ResourceService, IResourceService>(builder);
             RegisterTypeWithContracts<DataBaseService, IDataBaseService>(builder);
             RegisterTypeWithContracts<ExperiencePoints, IExperiencePoints>(builder);
-            RegisterTypeWithContracts<EnemyService, IEnemyService>(builder);
+            RegisterTypeWithContracts<ObstacleService, IObstacleService>(builder);
             RegisterTypeWithContracts<PauseService, IPauseService>(builder);
             RegisterTypeWithContracts<FloatingTextService, IFloatingTextService>(builder);
             RegisterTypeWithContracts<CurrencyService, ICurrencyService>(builder);

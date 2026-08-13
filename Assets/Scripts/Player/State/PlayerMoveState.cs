@@ -6,15 +6,15 @@ namespace Player.State
 {
     public class PlayerMoveState : IPlayerState
     {
+        private const float StrafeFactor = 0.5f;
+        
         private readonly Core.Player _player;
         private readonly PlayerStateMachine _stateMachine;
         private readonly PlayerAnimatedState _playerAnimatedState;
-
-        private float _currentSpeed => new Vector3(
-                _player.Rigidbody.velocity.x,
-                0,
-                _player.Rigidbody.velocity.z)
-            .magnitude;
+        
+        private bool _isTurning = false;
+        private float _targetYaw;
+        private float _turnSpeed = 180f;
 
         public PlayerMoveState(Core.Player player)
         {
@@ -27,78 +27,78 @@ namespace Player.State
 
         public void Enter()
         {
+            _playerAnimatedState.OnMove(1f);
         }
 
         public void Update()
         {
-            if (_player.InputController.IsMoveInputPerformed == false)
-                _stateMachine.SwitchState(StateId.Idle);
         }
 
         public void FixedUpdate()
         {
-            if (Camera.main != null)
+            if (_isTurning)
             {
-                Vector3 camForward = Camera.main.transform.forward;
-                Vector3 camRight = Camera.main.transform.right;
-
-                camForward.y = 0;
-                camRight.y = 0;
-
-                camForward.Normalize();
-                camRight.Normalize();
-
-                Vector3 moveDirection =
-                    camForward * _player.InputController.MoveDirection.y
-                    + camRight * _player.InputController.MoveDirection.x;
-
-                Move(moveDirection);
-                Rotate(moveDirection);
+                HandleTurning();
             }
+
+            Vector3 moveDirection = _player.transform.forward;
+            moveDirection.y = 0;
+            moveDirection.Normalize();
+            
+            float strafeInput = _player.InputController.MoveDirection.x;
+            Vector3 strafeVector = _player.transform.right * strafeInput;
+            
+            Vector3 finalDirection = (moveDirection + strafeVector * StrafeFactor).normalized;
+            
+            Vector3 velocity = finalDirection * _player.PlayerCharacteristics.MoveSpeed;
+            
+            velocity = ApplyGroundProjection(velocity);
+
+            _player.Rigidbody.velocity = velocity;
+            
+            float currentSpeed = new Vector3(_player.Rigidbody.velocity.x, 0, _player.Rigidbody.velocity.z).magnitude;
+            _playerAnimatedState.OnMove(currentSpeed / _player.PlayerCharacteristics.MoveSpeed);
+        }
+        
+        public void StartTurn(float angleDelta)
+        {
+            _targetYaw = _player.transform.eulerAngles.y + angleDelta;
+            _isTurning = true;
         }
 
         public void Exit()
         {
-            _player.Rigidbody.velocity = Vector3.zero;
-            
-            _playerAnimatedState.OnMove(0f); 
+            _playerAnimatedState.OnMove(0f);
+            _isTurning = false;
         }
 
-        private void Move(Vector3 moveDirection)
+        private void HandleTurning()
         {
-            Vector3 velocity = moveDirection * _player.PlayerCharacteristics.MoveSpeed;
-            
-            float rayLength = 0.5f; 
-            Vector3 rayStart = _player.transform.position + Vector3.up * 0.1f;
+            float currentYaw = _player.transform.eulerAngles.y;
+            float newYaw = Mathf.MoveTowardsAngle(currentYaw, _targetYaw, _turnSpeed * Time.fixedDeltaTime);
+            _player.transform.rotation = Quaternion.Euler(0, newYaw, 0);
 
+            if (Mathf.Abs(Mathf.DeltaAngle(currentYaw, _targetYaw)) < 0.1f)
+            {
+                _isTurning = false;
+            }
+        }
+
+        private Vector3 ApplyGroundProjection(Vector3 velocity)
+        {
+            float rayLength = 1f;
+            Vector3 rayStart = _player.transform.position + Vector3.up * 0.1f;
             if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, rayLength))
             {
                 velocity = Vector3.ProjectOnPlane(velocity, hit.normal);
-                
                 if (velocity.y < 0)
-                {
                     velocity.y -= 2f;
-                }
             }
             else
             {
                 velocity.y = _player.Rigidbody.velocity.y;
             }
-
-            _player.Rigidbody.velocity = velocity;
-            _playerAnimatedState.OnMove(_currentSpeed);
-        }
-
-        private void Rotate(Vector3 moveDirection)
-        {
-            if (moveDirection.sqrMagnitude > 0.01f)
-            {
-                Quaternion target = Quaternion.LookRotation(moveDirection);
-                _player.transform.rotation = Quaternion.Slerp(
-                    _player.transform.rotation,
-                    target,
-                    Time.fixedDeltaTime * _player.PlayerCharacteristics.RotationSpeed);
-            }
+            return velocity;
         }
     }
 }

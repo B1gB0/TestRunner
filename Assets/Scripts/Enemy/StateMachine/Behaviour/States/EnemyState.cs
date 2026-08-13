@@ -10,22 +10,22 @@ namespace Enemy.StateMachine.Behaviour.States
         protected const int MinValue = 0;
 
         protected NavMeshAgent Agent;
-        protected Enemy Enemy;
+        protected Obstacle Obstacle;
         protected ParticleEffectsService ParticleEffectsService;
         protected AudioSoundsService AudioSoundsService;
 
-        protected EnemyStateMachine EnemyStateMachine => Enemy.EnemyStateMachine;
-        protected EnemyAnimatedStateMachine AnimStateMachine => Enemy.AnimatedStateMachine;
-        protected Player.Core.Player Player => Enemy.Player;
-        protected EnemyData Data => Enemy.Data;
+        protected EnemyStateMachine EnemyStateMachine => Obstacle.EnemyStateMachine;
+        protected EnemyAnimatedStateMachine AnimStateMachine => Obstacle.AnimatedStateMachine;
+        protected Player.Core.Player Player => Obstacle.Player;
+        protected ObstacleData Data => Obstacle.Data;
 
         public virtual void Initialize(
-            Enemy enemy,
+            Obstacle obstacle,
             NavMeshAgent agent,
             ParticleEffectsService particleEffectsService,
             AudioSoundsService audioSoundsService)
         {
-            Enemy = enemy;
+            Obstacle = obstacle;
             Agent = agent;
             ParticleEffectsService = particleEffectsService;
             AudioSoundsService = audioSoundsService;

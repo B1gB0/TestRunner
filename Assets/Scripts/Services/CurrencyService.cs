@@ -11,11 +11,9 @@ namespace Services
         private const int MinValue = 0;
 
         public event Action<int> OnGoldValueChanged;
-        public event Action<int> OnAlienCocoonValueChanged;
-        public event Action OnAllAlienCocoonsCollected;
 
-        public int Gold { get; private set; }
-        public int AccumulatedGold { get; private set; }
+        public int Money { get; private set; }
+        public int AccumulatedMoney { get; private set; }
         public bool IsInitiated { get; private set; }
 
         public UniTask Init()
@@ -23,42 +21,42 @@ namespace Services
             if (IsInitiated)
                 return UniTask.CompletedTask;
 
-            // Gold = YG2.saves.Gold;
-            OnGoldValueChanged?.Invoke(Gold);
+            Money = YG2.saves.Money;
+            OnGoldValueChanged?.Invoke(Money);
 
             IsInitiated = true;
 
             return UniTask.CompletedTask;
         }
 
-        public void SetGold(int gold)
+        public void SetMoney(int gold)
         {
-            Gold = gold;
-            OnGoldValueChanged?.Invoke(Gold);
+            Money = gold;
+            OnGoldValueChanged?.Invoke(Money);
         }
 
         public void AddGold(int gold)
         {
-            Gold += gold;
-            AccumulatedGold += gold;
-            OnGoldValueChanged?.Invoke(Gold);
+            Money += gold;
+            AccumulatedMoney += gold;
+            OnGoldValueChanged?.Invoke(Money);
         }
 
         public void SpendGold(int gold)
         {
-            Gold -= gold;
-            OnGoldValueChanged?.Invoke(Gold);
+            Money -= gold;
+            OnGoldValueChanged?.Invoke(Money);
         }
         
         public void ResetAccumulatedGold()
         {
-            AccumulatedGold = MinValue;
+            AccumulatedMoney = MinValue;
         }
 
         public void SaveGold()
         {
-            // YG2.saves.Gold = Gold;
-            // YG2.SaveProgress();
+            YG2.saves.Money = Money;
+            YG2.SaveProgress();
         }
     }
 }

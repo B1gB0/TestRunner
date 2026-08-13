@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.Scripts.Level;
 using DG.Tweening;
 using Player.Level;
 using Reflex.Attributes;

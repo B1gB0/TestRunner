@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Project.Scripts.Level.Spawners
+namespace Player.Level.Spawners
 {
     [CreateAssetMenu(fileName = "EnemyWave")]
     public class EnemyWave : ScriptableObject
@@ -13,7 +13,7 @@ namespace _Project.Scripts.Level.Spawners
         [field: SerializeField] public int BanditCount { get; private set; }
         [field: SerializeField] public int BanditRangerCount { get; private set; }
 
-        public List<Enemy.Enemy> Enemies { get; private set; } = new();
+        public List<Enemy.Obstacle> Enemies { get; private set; } = new();
         public List<Vector3> WaveSpawnPoints { get; private set; }
         public List<Vector3> PatrolPoints { get; private set; }
 
@@ -25,15 +25,15 @@ namespace _Project.Scripts.Level.Spawners
             PatrolPoints = patrolPoints;
         }
 
-        public void AddEnemy(Enemy.Enemy enemy)
+        public void AddEnemy(Enemy.Obstacle obstacle)
         {
-            Enemies.Add(enemy);
-            enemy.Die += RemoveEnemy;
+            Enemies.Add(obstacle);
+            obstacle.Die += RemoveEnemy;
         }
 
         public void KillEnemies()
         {
-            var snapshot = new List<Enemy.Enemy>(Enemies);
+            var snapshot = new List<Enemy.Obstacle>(Enemies);
             foreach (var enemy in snapshot)
             {
                 enemy.ForceKill();
@@ -42,10 +42,10 @@ namespace _Project.Scripts.Level.Spawners
             Enemies.Clear();
         }
 
-        private void RemoveEnemy(Enemy.Enemy enemy)
+        private void RemoveEnemy(Enemy.Obstacle obstacle)
         {
-            Enemies.Remove(enemy);
-            enemy.Die -= RemoveEnemy;
+            Enemies.Remove(obstacle);
+            obstacle.Die -= RemoveEnemy;
         }
     }
 }

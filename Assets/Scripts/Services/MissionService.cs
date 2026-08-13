@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Level;
 using Cysharp.Threading.Tasks;
 using Player.Level;
 using Reflex.Attributes;
@@ -11,8 +10,6 @@ namespace Services
     public class MissionService : MonoBehaviour, IService
     {
         private const int DefaultNumberLevel = 0;
-
-        private readonly Dictionary<int, string> _graveyardSceneLevels = new();
 
         private IDataBaseService _dataBaseService;
 
@@ -44,11 +41,6 @@ namespace Services
                 }
             }
 
-            foreach (var graveyardSceneLevel in _dataBaseService.Content.GraveyardSceneLevels)
-            {
-                _graveyardSceneLevels.Add(graveyardSceneLevel.Number, graveyardSceneLevel.SceneName);
-            }
-
             IsInitiated = true;
 
             return UniTask.CompletedTask;
@@ -69,18 +61,18 @@ namespace Services
             CurrentNumberLevel = numberLevel;
         }
 
-        public string GetSceneNameByCurrentNumber()
-        {
-            return GetSceneNameByNumber(CurrentNumberLevel);
-        }
-
-        public string GetSceneNameByNumber(int number)
-        {
-            return CurrentMission.Id switch
-            {
-                Game.Constant.Missions.Graveyard => _graveyardSceneLevels[number],
-                _ => null
-            };
-        }
+        // public string GetSceneNameByCurrentNumber()
+        // {
+        //     return GetSceneNameByNumber(CurrentNumberLevel);
+        // }
+        //
+        // public string GetSceneNameByNumber(int number)
+        // {
+        //     return CurrentMission.Id switch
+        //     {
+        //         Game.Constant.Missions.Graveyard => _graveyardSceneLevels[number],
+        //         _ => null
+        //     };
+        // }
     }
 }

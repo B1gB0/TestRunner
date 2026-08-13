@@ -24,7 +24,7 @@ namespace UI.View
 
         private void Start()
         {
-            _text.text = _currencyService.Gold.ToString();
+            _text.text = _currencyService.Money.ToString();
             _currencyService.OnGoldValueChanged += SetValue;
         }
 
@@ -52,7 +52,7 @@ namespace UI.View
 
         private void SetValue(int value)
         {
-            _text.text = _currencyService.Gold.ToString();
+            _text.text = _currencyService.Money.ToString();
         }
     }
 }

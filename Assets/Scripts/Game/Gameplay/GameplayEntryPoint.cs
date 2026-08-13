@@ -28,17 +28,17 @@ namespace Game.Gameplay
         [SerializeField] private CinemachineFreeLook _freeLookCamera;
         [SerializeField] private UIGameplayRootBinder _sceneUIRootPrefab;
         [SerializeField] private DataFactory _dataFactory;
-        [SerializeField] private LevelInitData _levelInitData;
         [SerializeField] private ViewFactory _viewFactory;
 
 
+        private LevelInitData _levelInitData;
         private Level _level;
         private UIRootView _uiRoot;
         private UIGameplayRootBinder _uiScene;
         private Container _container;
         private GameplayExitParameters _exitParameters;
 
-        private IEnemyService _enemyService;
+        private IObstacleService _obstacleService;
         private IDataBaseService _dataBaseService;
         private IPlayerService _playerService;
         private IFloatingTextService _floatingTextService;
@@ -56,7 +56,7 @@ namespace Game.Gameplay
 
         [Inject]
         private void Construct(
-            IEnemyService enemyService,
+            IObstacleService obstacleService,
             IDataBaseService dataBaseService,
             IPlayerService playerService,
             ParticleEffectsService particleEffectsService,
@@ -67,7 +67,7 @@ namespace Game.Gameplay
             IPauseService pauseService,
             ICurrencyService currencyService)
         {
-            _enemyService = enemyService;
+            _obstacleService = obstacleService;
             _dataBaseService = dataBaseService;
             _playerService = playerService;
             _particleEffectsService = particleEffectsService;
@@ -105,7 +105,7 @@ namespace Game.Gameplay
             await InitData();
 
             await _dataBaseService.Init();
-            await _enemyService.Init();
+            await _obstacleService.Init();
             await _playerService.Init();
             await _audioSoundsService.Init();
             await _missionService.Init();
@@ -117,7 +117,7 @@ namespace Game.Gameplay
             _level = FindObjectOfType<Level>();
             GameObjectInjector.InjectObject(_level.gameObject, _container);
 
-            _enemyService.GetData(_enemyInitData);
+            _obstacleService.GetData(_enemyInitData);
 
             _level.GetDependencies(
                 _levelInitData,
@@ -200,9 +200,7 @@ namespace Game.Gameplay
             int nextNumberLevel = _missionService.CurrentNumberLevel + NextOperationStep;
             _missionService.SetCurrentNumberLevel(nextNumberLevel);
 
-            var sceneName = _missionService.GetSceneNameByNumber(nextNumberLevel);
-
-            var gameplayEnterParameters = new GameplayEnterParameters(sceneName, nextNumberLevel);
+            var gameplayEnterParameters = new GameplayEnterParameters(Scenes.Gameplay, nextNumberLevel);
 
             _exitParameters = new GameplayExitParameters(gameplayEnterParameters);
         }

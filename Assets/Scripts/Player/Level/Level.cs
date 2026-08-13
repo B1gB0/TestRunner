@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using _Project.Scripts.Level.Spawners;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using DataBase.InitDataSO;
 using Game.GameRoot;
 using Player.Level.Spawners;
+using Player.Level.Triggers;
 using Reflex.Attributes;
 using Services;
 using UI.StateMachine;
@@ -18,27 +18,19 @@ namespace Player.Level
     {
         protected const float MinValue = 0f;
 
-        protected const int FirstWaveEnemy = 0;
-        protected const int SecondWaveEnemy = 1;
-        protected const int ThirdWaveEnemy = 2;
-        protected const int FourthWaveEnemy = 3;
-        protected const int FifthWaveNumber = 4;
-
-        [Header("EnemyWaves")]
-        [SerializeField] protected float SpawnWaveOfEnemyDelay = 10f;
-
-        [SerializeField] private List<EnemyWave> _enemyWaves;
-        [SerializeField] private int _limitEnemies;
-
         protected ViewFactory ViewFactory;
         protected UIStateMachine UIStateMachine;
         protected UIRootView UIRootView;
 
         protected float LastSpawnTime;
 
-        protected EnemySpawner EnemySpawner;
+        protected ObstacleSpawner ObstacleSpawner;
+        
+        [SerializeField] private List<TurnTrigger>  _turnTriggers;
+        [SerializeField] private List<AddMoneyTrigger>  _addMoneyTriggers;
+        [SerializeField] private List<SpendMoneyTrigger>  _spendMoneyTriggers;
 
-        private IEnemyService _enemyService;
+        private IObstacleService _obstacleService;
         private IPlayerService _playerService;
         private ParticleEffectsService _particleEffectsService;
         private AudioSoundsService _audioSoundsService;
@@ -46,25 +38,33 @@ namespace Player.Level
         private LevelInitData _levelInitData;
         private PlayerInitData _playerInitData;
         private CinemachineFreeLook _cinemachineFreeLook;
-        
+        private Core.Player _player;
+
         public event Action IsInitiatedSpawners;
         public event Action PlayerIsSpawned;
         public event Action OnGoToNextScene;
 
         public HealthBar HealthBar { get; private set; }
-        public List<EnemyWave> EnemyWaves => _enemyWaves;
 
         [Inject]
         private void Construct(
-            IEnemyService enemyService,
+            IObstacleService obstacleService,
             IPlayerService playerService,
             ParticleEffectsService particleEffectsService,
             AudioSoundsService audioSoundsService)
         {
-            _enemyService = enemyService;
+            _obstacleService = obstacleService;
             _playerService = playerService;
             _particleEffectsService = particleEffectsService;
             _audioSoundsService = audioSoundsService;
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var turnTrigger in _turnTriggers)
+            {
+                turnTrigger.OnTurn -= _player.StartTurn;
+            }
         }
 
         public void GetDependencies(
@@ -89,7 +89,7 @@ namespace Player.Level
         {
             await CreatePlayer();
 
-            InitSpawners(_enemyService);
+            InitSpawners(_obstacleService);
         }
 
         protected async UniTask CreatePlayer()
@@ -113,34 +113,18 @@ namespace Player.Level
 
             PlayerIsSpawned?.Invoke();
 
-            _playerService.Player.PlayerCollisionHandler.GetEnemyWaves(_enemyWaves);
-            
             _playerService.SpawnPlayer();
-        }
+            
+            _player = player;
 
-        protected void CreateWaveOfEnemyByTimer(int numberWaveEnemy)
-        {
-            if (LastSpawnTime <= MinValue)
+            foreach (var turnTrigger in _turnTriggers)
             {
-                CreateWaveOfEnemies(numberWaveEnemy);
-
-                foreach (var enemy in _enemyWaves[numberWaveEnemy].Enemies)
-                {
-                    enemy.ChangeFollowEnemyState(true);
-                }
-
-                LastSpawnTime = SpawnWaveOfEnemyDelay;
+                turnTrigger.OnTurn += player.StartTurn;
             }
-
-            LastSpawnTime -= Time.fixedDeltaTime;
         }
 
-        protected void CreateWaveOfEnemies(int numberWave)
+        protected void CreateObstacles(int numberWave)
         {
-            if (_enemyWaves.Count == 0)
-                return;
-
-            EnemySpawner.SpawnWave(_enemyWaves[numberWave]);
         }
 
         protected void GoToNextScene()
@@ -148,50 +132,11 @@ namespace Player.Level
             OnGoToNextScene?.Invoke();
         }
 
-        private void InitSpawners(IEnemyService enemyService)
+        private void InitSpawners(IObstacleService obstacleService)
         {
-            InitEnemyWaves();
-
-            EnemySpawner = new EnemySpawner(enemyService, _limitEnemies, _audioSoundsService, _particleEffectsService);
+            ObstacleSpawner = new ObstacleSpawner(obstacleService, _audioSoundsService, _particleEffectsService);
 
             IsInitiatedSpawners?.Invoke();
-        }
-
-        private void InitEnemyWaves()
-        {
-            for (int i = 0; i < _enemyWaves.Count; i++)
-            {
-                switch (i)
-                {
-                    case FirstWaveEnemy:
-                        _enemyWaves[i].GetEnemyPositions(
-                            _levelInitData.FirstWaveSpawnPoints,
-                            _levelInitData.EnemyFirstPatrolPositions);
-                        break;
-                    case SecondWaveEnemy:
-                        _enemyWaves[i].GetEnemyPositions(
-                            _levelInitData.SecondWaveSpawnPoints,
-                            _levelInitData.EnemySecondPatrolPositions);
-                        break;
-                    case ThirdWaveEnemy:
-                        _enemyWaves[i].GetEnemyPositions(
-                            _levelInitData.ThirdWaveSpawnPoints,
-                            _levelInitData.EnemyThirdPatrolPositions);
-                        break;
-                    case FourthWaveEnemy:
-                        _enemyWaves[i].GetEnemyPositions(
-                            _levelInitData.FourthWaveSpawnPoints,
-                            _levelInitData.EnemyFourthPatrolPositions);
-                        break;
-                    case FifthWaveNumber:
-                        _enemyWaves[i].GetEnemyPositions(
-                            _levelInitData.FifthWaveSpawnPoints,
-                            _levelInitData.EnemyFifthPatrolPositions);
-                        break;
-                    default:
-                        throw new Exception("There is not enough data for new waves");
-                }
-            }
         }
     }
 }

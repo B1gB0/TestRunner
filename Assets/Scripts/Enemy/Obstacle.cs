@@ -9,10 +9,9 @@ using UnityEngine;
 
 namespace Enemy
 {
-    [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Collider))]
-    public abstract class Enemy : MonoBehaviour, IAcceptable, IExperienceScoreActor
+    public abstract class Obstacle : MonoBehaviour, IAcceptable, IExperienceScoreActor
     {
         [SerializeField] private Animator _animator;
 
@@ -24,23 +23,19 @@ namespace Enemy
         
         private bool _isDead;
 
-        public event Action<Enemy> Die;
+        public event Action<Obstacle> Die;
 
         [field: SerializeField] public Health Health { get; private set; }
         [field: SerializeField] public EnemyStateMachine EnemyStateMachine { get; private set; }
         [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
         [field: SerializeField] public Collider Collider { get; private set; }
-
-        public int Experience { get; private set; }
-        public int Score { get; private set; }
+        
         public bool IsEnemy { get; private set; }
 
-        public EnemyData Data { get; private set; }
+        public ObstacleData Data { get; private set; }
         public Player.Core.Player Player { get; private set; }
         public EnemyAnimatedStateMachine AnimatedStateMachine { get; private set; }
-        public EnemyType Type { get; private set; }
-        public bool CanFollow { get; private set; }
-        public float Armor { get; private set; }
+        public ObstacleType Type { get; private set; }
 
         private void Start()
         {
@@ -61,7 +56,7 @@ namespace Enemy
 
         public void Construct(
             Player.Core.Player player,
-            EnemyData enemyData,
+            ObstacleData obstacleData,
             IFloatingTextService floatingTextService,
             ParticleEffectsService particleEffectsService,
             AudioSoundsService audioSoundsService,
@@ -69,11 +64,9 @@ namespace Enemy
             ICurrencyService currencyService)
         {
             Player = player;
-            Data = enemyData;
+            Data = obstacleData;
             Type = Data.Type;
-
-            Score = Data.Score;
-            Experience = Data.Experience;
+            
             IsEnemy = true;
 
             FloatingTextService = floatingTextService;
@@ -82,20 +75,13 @@ namespace Enemy
             ExperiencePoints = experiencePoints;
             CurrencyService = currencyService;
 
-            Armor = Data.Armor;
-
             Health.IsSpawnedDamageText += FloatingTextService.OnSpawnFloatingText;
-        }
-
-        public void ChangeFollowEnemyState(bool canFollow)
-        {
-            CanFollow = canFollow;
         }
 
         public void AcceptScore(IScoreActorVisitor visitor)
         {
             visitor.Visit(this);
-            CurrencyService.AddGold(Data.Gold);
+            CurrencyService.AddGold(Data.Money);
         }
 
         public virtual void OnReactState(bool isEnteredToState)
@@ -117,13 +103,9 @@ namespace Enemy
             if (_isDead) return;
             _isDead = true;
             
-            // ResetModifiers();
             Health.IsSpawnedDamageText -= FloatingTextService.OnSpawnFloatingText;
-            // OnChangeSpeed -= UpdateCurrentSpeed;
 
             Die?.Invoke(this);
-
-            // gameObject.SetActive(false);
         }
 
         protected virtual void OnPlayHitEffect()

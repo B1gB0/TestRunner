@@ -12,80 +12,24 @@ namespace DataBase.InitDataSO
         {
             GameObject playerSpawnPoint = GameObject.FindGameObjectWithTag("PlayerSpawnPoint");
             
-            GameObject[] enemyFirstPatrolPoints = GameObject.FindGameObjectsWithTag("EnemyFirstPatrolPoints");
-            GameObject[] enemySecondPatrolPoints = GameObject.FindGameObjectsWithTag("EnemySecondPatrolPoints");
-            GameObject[] enemyThirdPatrolPoints = GameObject.FindGameObjectsWithTag("EnemyThirdPatrolPoints");
-            GameObject[] enemyFourthPatrolPoints = GameObject.FindGameObjectsWithTag("EnemyFourthPatrolPoints");
-            GameObject[] enemyFifthPatrolPoints = GameObject.FindGameObjectsWithTag("EnemyFifthPatrolPoints");
+            GameObject[] bottleSpawnPoints = GameObject.FindGameObjectsWithTag("BottleSpawnPoints");
             
-            GameObject[] firstWavePoints = GameObject.FindGameObjectsWithTag("FirstWaveEnemySpawnPoints");
-            GameObject[] secondWavePoints = GameObject.FindGameObjectsWithTag("SecondWaveEnemySpawnPoints");
-            GameObject[] thirdWavePoints = GameObject.FindGameObjectsWithTag("ThirdWaveEnemySpawnPoints");
-            GameObject[] fourthWavePoints = GameObject.FindGameObjectsWithTag("FourthWaveEnemySpawnPoints");
-            GameObject[] fifthWavePoints = GameObject.FindGameObjectsWithTag("FifthWaveEnemySpawnPoints");
+            GameObject[] moneySpawnPoints = GameObject.FindGameObjectsWithTag("MoneySpawnPoints");
 
             levelInitData.PlayerSpawnPosition = playerSpawnPoint.transform.position;
             
-            levelInitData.EnemyFirstPatrolPositions.Clear();
-            levelInitData.EnemySecondPatrolPositions.Clear();
-            levelInitData.EnemyThirdPatrolPositions.Clear();
-            levelInitData.EnemyFourthPatrolPositions.Clear();
-            levelInitData.EnemyFifthPatrolPositions.Clear();
+            levelInitData.BottleSpawnPositions.Clear();
             
-            levelInitData.FirstWaveSpawnPoints.Clear();
-            levelInitData.SecondWaveSpawnPoints.Clear();
-            levelInitData.ThirdWaveSpawnPoints.Clear();
-            levelInitData.FourthWaveSpawnPoints.Clear();
-            levelInitData.FifthWaveSpawnPoints.Clear();
-
-            foreach (var point in enemyFirstPatrolPoints)
+            levelInitData.MoneySpawnPositions.Clear();
+            
+            foreach (var point in bottleSpawnPoints)
             {
-                levelInitData.EnemyFirstPatrolPositions.Add(point.transform.position);
+                levelInitData.BottleSpawnPositions.Add(point.transform.position);
             }
             
-            foreach (var point in enemySecondPatrolPoints)
+            foreach (var point in moneySpawnPoints)
             {
-                levelInitData.EnemySecondPatrolPositions.Add(point.transform.position);
-            }
-            
-            foreach (var point in enemyThirdPatrolPoints)
-            {
-                levelInitData.EnemyThirdPatrolPositions.Add(point.transform.position);
-            }
-            
-            foreach (var point in enemyFourthPatrolPoints)
-            {
-                levelInitData.EnemyFourthPatrolPositions.Add(point.transform.position);
-            }
-            
-            foreach (var point in enemyFifthPatrolPoints)
-            {
-                levelInitData.EnemyFifthPatrolPositions.Add(point.transform.position);
-            }
-
-            foreach (var point in firstWavePoints)
-            {
-                levelInitData.FirstWaveSpawnPoints.Add(point.transform.position);
-            }
-
-            foreach (var point in secondWavePoints)
-            {
-                levelInitData.SecondWaveSpawnPoints.Add(point.transform.position);
-            }
-            
-            foreach (var point in thirdWavePoints)
-            {
-                levelInitData.ThirdWaveSpawnPoints.Add(point.transform.position);
-            }
-            
-            foreach (var point in fourthWavePoints)
-            {
-                levelInitData.FourthWaveSpawnPoints.Add(point.transform.position);
-            }
-            
-            foreach (var point in fifthWavePoints)
-            {
-                levelInitData.FifthWaveSpawnPoints.Add(point.transform.position);
+                levelInitData.MoneySpawnPositions.Add(point.transform.position);
             }
 
             if (!Application.isPlaying)

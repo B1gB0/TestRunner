@@ -10,7 +10,7 @@ namespace Enemy.StateMachine.Behaviour
     [RequireComponent(typeof(NavMeshAgent))]
     public class EnemyStateMachine : MonoBehaviour
     {
-        private Enemy _enemy;
+        private Obstacle _obstacle;
         private NavMeshAgent _agent;
 
         private EnemyState _currentState;
@@ -21,15 +21,12 @@ namespace Enemy.StateMachine.Behaviour
 
         private void Awake()
         {
-            _enemy = GetComponent<Enemy>();
+            _obstacle = GetComponent<Obstacle>();
             _agent = GetComponent<NavMeshAgent>();
             
             _states = new Dictionary<Type, EnemyState>
             {
                 { typeof(IdleState), new IdleState() },
-                { typeof(FollowState), new FollowState() },
-                { typeof(AttackState), new AttackState() },
-                { typeof(HitState), new HitState() },
                 { typeof(DeathState), new DeathState() },
             };
         }
@@ -48,7 +45,7 @@ namespace Enemy.StateMachine.Behaviour
         {
             foreach (var state in _states.Values)
             {
-                state.Initialize(_enemy, _agent, _particleEffectsService, _audioSoundsService);
+                state.Initialize(_obstacle, _agent, _particleEffectsService, _audioSoundsService);
             }
         }
 
