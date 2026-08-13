@@ -1,0 +1,17 @@
+﻿using UnityEngine;
+
+namespace Enemy.StateMachine.Animation
+{
+    public class EnemyAnimationNamesBase
+    {
+        public readonly int Idle = Animator.StringToHash(nameof(Idle));
+        public readonly int Move = Animator.StringToHash(nameof(Move));
+        public readonly int Attack = Animator.StringToHash(nameof(Attack));
+        public readonly int Aim = Animator.StringToHash(nameof(Aim));
+        public readonly int Load = Animator.StringToHash(nameof(Load));
+        public readonly int Hit = Animator.StringToHash(nameof(Hit));
+        public readonly int Coil = Animator.StringToHash(nameof(Coil));
+        public readonly int Omni = Animator.StringToHash(nameof(Omni));
+        public readonly int Death = Animator.StringToHash(nameof(Death));
+    }
+}

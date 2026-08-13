@@ -1,0 +1,27 @@
+﻿using UnityEngine;
+
+namespace Enemy.StateMachine.Animation.States
+{
+    public class DeathAnimatedState : EnemyAnimatedState
+    {
+        public DeathAnimatedState(Animator animator, EnemyAnimationNamesBase enemyAnimationBase)
+            : base(animator, enemyAnimationBase)
+        {
+        }
+        
+        public override void Enter()
+        {
+            base.Enter();
+            Animator.applyRootMotion = true;
+            Animator.StopPlayback();
+            Animator.CrossFade(EnemyAnimationBase.Death, Duration);
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            Animator.StopPlayback();
+            Animator.applyRootMotion = false;
+        }
+    }
+}

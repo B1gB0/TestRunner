@@ -1,0 +1,50 @@
+using DataBase.Data;
+using Enemy.StateMachine.Animation;
+using Services;
+using UnityEngine.AI;
+
+namespace Enemy.StateMachine.Behaviour.States
+{
+    public abstract class EnemyState
+    {
+        protected const int MinValue = 0;
+
+        protected NavMeshAgent Agent;
+        protected Enemy Enemy;
+        protected ParticleEffectsService ParticleEffectsService;
+        protected AudioSoundsService AudioSoundsService;
+
+        protected EnemyStateMachine EnemyStateMachine => Enemy.EnemyStateMachine;
+        protected EnemyAnimatedStateMachine AnimStateMachine => Enemy.AnimatedStateMachine;
+        protected Player.Core.Player Player => Enemy.Player;
+        protected EnemyData Data => Enemy.Data;
+
+        public virtual void Initialize(
+            Enemy enemy,
+            NavMeshAgent agent,
+            ParticleEffectsService particleEffectsService,
+            AudioSoundsService audioSoundsService)
+        {
+            Enemy = enemy;
+            Agent = agent;
+            ParticleEffectsService = particleEffectsService;
+            AudioSoundsService = audioSoundsService;
+        }
+
+        public virtual void Enter()
+        {
+        }
+
+        public virtual void Exit()
+        {
+        }
+
+        public virtual void Update()
+        {
+        }
+
+        public virtual void FixedUpdate()
+        {
+        }
+    }
+}

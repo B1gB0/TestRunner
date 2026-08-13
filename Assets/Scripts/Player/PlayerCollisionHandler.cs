@@ -1,0 +1,66 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using _Project.Scripts.Level.Spawners;
+using _Project.Scripts.Level.Triggers;
+using UnityEngine;
+
+namespace Player
+{
+    [RequireComponent(typeof(Core.Player))]
+    public class PlayerCollisionHandler : MonoBehaviour
+    {
+        private Core.Player _player;
+
+        public List<EnemyWave> EnemyWaves { get; private set; }
+
+        private void Awake()
+        {
+            _player = GetComponent<Core.Player>();
+        }
+
+        private void OnTriggerEnter(Collider trigger)
+        {
+            if (trigger.TryGetComponent(out EnemyWaveFollowTrigger followTrigger))
+            {
+                foreach (var enemy in followTrigger.NumberWaveOfEnemies.SelectMany(number => EnemyWaves[number].Enemies))
+                {
+                    enemy.ChangeFollowEnemyState(true);
+                }
+            }
+            
+            // if (trigger.TryGetComponent(out EntranceTrigger entranceTrigger))
+            // {
+            //     entranceTrigger.Entrance.OpenGate();
+            // }
+        }
+        
+        private void OnTriggerExit(Collider trigger)
+        {
+            // if (trigger.TryGetComponent(out EntranceTrigger entranceTrigger))
+            // {
+            //     entranceTrigger.Entrance.CloseGate();
+            // }
+        }
+        //
+        // private void OnCollisionEnter(Collision collision)
+        // {
+        //     if (collision.gameObject.TryGetComponent(out RedCrystal healingCrystal))
+        //     {
+        //         if (_playerService.PlayerActor.Health.TargetHealth == _playerService.PlayerActor.Health.MaxHealth)
+        //             return;
+        //
+        //         _playerService.PlayerActor.Health.AddHealth(healingCrystal.HealthValue);
+        //         healingCrystal.Destroy();
+        //     }
+        //     else if (collision.gameObject.TryGetComponent(out GoldCrystal goldCrystal))
+        //     {
+        //         goldCrystal.Destroy();
+        //     }
+        // }
+
+        public void GetEnemyWaves(List<EnemyWave> enemyWaves)
+        {
+            EnemyWaves = enemyWaves;
+        }
+    }
+}
