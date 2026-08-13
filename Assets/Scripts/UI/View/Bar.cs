@@ -12,7 +12,8 @@ namespace UI.View
         [SerializeField] protected Slider SmoothSlider;
         [SerializeField] protected Slider Slider;
 
-        [SerializeField] protected TMP_Text Text;
+        [SerializeField] protected TMP_Text TextValue;
+        [SerializeField] protected TMP_Text NameText;
 
         [SerializeField] private Transform _showPoint;
         [SerializeField] private Transform _hidePoint;
@@ -58,13 +59,19 @@ namespace UI.View
             _weaponPanelPoint = weaponPanelPoint;
         }
 
+        public void ChangePlayerCategory(Color color)
+        {
+            Slider.image.color = color;
+            NameText.color = color;
+        }
+
         protected void SetValues(float currentValue, float maxValue, float targetValue)
         {
             SmoothSlider.value = currentValue / maxValue;
 
             Slider.value = targetValue / maxValue;
 
-            Text.text = (int)targetValue + "/" + (int)maxValue;
+            TextValue.text = (int)targetValue + "/" + (int)maxValue;
         }
     }
 }
