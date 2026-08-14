@@ -17,10 +17,22 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 00e14613bd85ac64c8df65c129111b7d
   m_SerializeEntries:
+  - m_GUID: 040bf1a9f4cbd684ead9ae7289cc1742
+    m_Address: Assets/Prefabs/Audio/Sounds/ActionMusic.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Music
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 04a01299def0d8d47aae54666f49aac6
     m_Address: MoneyView
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21b960d92f7b4b048bc658f5202f8c9e
+    m_Address: Assets/Prefabs/Effects/Particles/BottleHit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Particles
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4a8aad03d0d96f141934c8cf6cadb500
     m_Address: EndGamePanel
@@ -52,6 +64,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bcdf12acf43d0ed4a8223bb730b9d07c
+    m_Address: Assets/Prefabs/Audio/Sounds/Hit.mp3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c319f9167c359c743be80b761939aa98
     m_Address: DataContainer
     m_ReadOnly: 0
@@ -61,6 +79,12 @@ MonoBehaviour:
     m_Address: ObstacleInitData
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f9bc6b20471484044b4743e8ab97b7c5
+    m_Address: Assets/Prefabs/Audio/Sounds/UIButtonClick.wav
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sound
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: fef077bcd8586f24f80da40864cd3edc
     m_Address: HealthBar
