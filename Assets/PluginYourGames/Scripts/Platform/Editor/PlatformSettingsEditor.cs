@@ -9,7 +9,7 @@ using System.Linq;
 namespace YG.EditorScr
 {
     [CustomEditor(typeof(PlatformSettings))]
-    public class PlatformSettingsEditor : Editor
+    public class PlatformSettingsEditor : UnityEditor.Editor
     {
         private PlatformSettings scr;
         private Texture2D iconPlatform;

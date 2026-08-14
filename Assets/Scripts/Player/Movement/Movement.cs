@@ -1,5 +1,4 @@
 using System;
-using Player.State;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -85,10 +84,6 @@ namespace Player.Movement
 
         private void Rotate(Vector3 moveDir)
         {
-            // Блокируем поворот, если игрок в состоянии атаки
-            if (_player.StateMachine.CurentState.IdState == StateId.Attack)
-                return;
-
             Quaternion target = Quaternion.LookRotation(moveDir);
             Quaternion newRot = Quaternion.Slerp(_rb.rotation, target, Time.fixedDeltaTime * _rotationSpeed);
 

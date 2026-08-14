@@ -4,7 +4,7 @@ using UnityEditor;
 namespace YG.EditorScr
 {
     [CustomEditor(typeof(EventsYG2), true), CanEditMultipleObjects]
-    public class EventsYG2Editor : Editor
+    public class EventsYG2Editor : UnityEditor.Editor
     {
         private SerializedProperty m_DelegatesProperty;
 
@@ -16,7 +16,7 @@ namespace YG.EditorScr
         protected virtual void OnEnable()
         {
 #if RU_YG2
-            m_AddButonContent = EditorGUIUtility.TrTextContent("Добавить новый тип события");
+            m_AddButonContent = EditorGUIUtility.TrTextContent("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 #else
             m_AddButonContent = EditorGUIUtility.TrTextContent("Add New Event Type");
 #endif

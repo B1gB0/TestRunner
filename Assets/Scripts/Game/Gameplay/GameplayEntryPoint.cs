@@ -31,6 +31,8 @@ namespace Game.Gameplay
         [SerializeField] private ViewFactory _viewFactory;
         [SerializeField] private Mission _mission;
         
+        private int _currentLevelIndex;
+        
         private UIRootView _uiRoot;
         private UIGameplayRootBinder _uiScene;
         private Container _container;
@@ -85,26 +87,17 @@ namespace Game.Gameplay
             GameplayEnterParameters enterParameters = null)
         {
             _container = gameObject.scene.GetSceneContainer();
-
             _uiRoot = uiRoot;
 
             await _particleEffectsService.Init();
 
             _uiScene = Instantiate(_sceneUIRootPrefab);
-
             _viewFactory.GetEntities(uiRoot, _uiScene, _container, this);
-
             uiRoot.AttachSceneUI(_uiScene.gameObject);
-
             GameObjectInjector.InjectRecursive(uiRoot.gameObject, _container);
-
             _uiScene.GetUIStateMachine(uiRoot.UIStateMachine, _uiRoot.UIRootButtons);
 
-            // uiRoot.ExitPanel.OnExitToMainMenu += GetMainMenuExitParameters;
-            // uiRoot.ExitPanel.OnExitToMainMenu += _uiScene.HandleGoToNextSceneButtonClick;
-
             await InitData();
-
             await _dataBaseService.Init();
             await _obstacleService.Init();
             await _playerService.Init();
@@ -113,13 +106,98 @@ namespace Game.Gameplay
             await _uiLocalizationService.Init();
             await _currencyService.Init();
 
+            _audioSoundsService.PlayMusic(SoundsType.ActionMusic);
             _playerService.GetSceneObjects(_container, _freeLookCamera);
 
-            Level level = Instantiate(_mission.Maps[MinCountValue].Level);
-            GameObjectInjector.InjectObject(level.gameObject, _container);
+            // --- Создание первого уровня ---
+            _currentLevelIndex = MinCountValue;
+            await LoadLevel(_currentLevelIndex); // вынесли в отдельный метод
 
-            _currentLevel = level;
-            _currentLevelInitData = _mission.Maps[MinCountValue];
+            var exitSceneSignalSubject = new Subject<Unit>();
+            _uiScene.Bind(exitSceneSignalSubject);
+
+            uiRoot.UIStateMachine.EnterIn<GameplayState>();
+            uiRoot.MoneyView.Show();
+            OnShowJoystickWithAttackButton();
+
+            var scene = SceneManager.GetActiveScene();
+            if (scene.name == Scenes.Gameplay)
+            {
+                _endGamePanel = await _viewFactory.CreateEndGamePanel();
+                _endGamePanel.GoToVillageButton.onClick.AddListener(_uiScene.HandleGoToNextScene);
+                _endGamePanel.NextLevelButton.onClick.AddListener(OnNextLevelButtonClick);
+                uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _endGamePanel.SetLabelText;
+            }
+            else
+            {
+                YG2.SaveProgress();
+                _currencyService.SaveMoney();
+            }
+
+            // Подписки на игрока уже сделаны в LoadLevel, поэтому здесь их не дублируем
+
+            var exitToSceneSignal = exitSceneSignalSubject.Select(_ => _exitParameters);
+            _uiScene.ResetCountdownTutorialPointer();
+            return exitToSceneSignal;
+        }
+
+        private void OnDestroy()
+        {
+            var scene = SceneManager.GetActiveScene();
+
+            if (_endGamePanel != null)
+            {
+                _endGamePanel.GoToVillageButton.onClick.RemoveListener(_uiScene.HandleGoToNextScene);
+                _endGamePanel.NextLevelButton.onClick.RemoveListener(OnNextLevelButtonClick);
+                if (scene.name == Scenes.Gameplay)
+                {
+                    _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged -= _endGamePanel.SetLabelText;
+                }
+            }
+
+            // Отписываемся от текущего игрока
+            if (_playerService != null && _playerService.Player != null)
+            {
+                UnsubscribeFromPlayerEvents(_playerService.Player);
+            }
+
+            if (_uiRoot != null)
+            {
+                _uiRoot.SettingsButton.onClick.RemoveListener(_playerService.Player.InputController.LockPlayerMovement);
+                _uiRoot.LeaderboardButton.onClick.RemoveListener(_playerService.Player.InputController.LockPlayerMovement);
+            }
+        }
+
+        public void GetGameplayExitParameters()
+        {
+            _audioSoundsService.PlayMusic(SoundsType.ActionMusic);
+            _uiRoot.UIRootButtons.Deactivate();
+
+            int nextNumberLevel = _missionService.CurrentNumberLevel + NextOperationStep;
+            _missionService.SetCurrentNumberLevel(nextNumberLevel);
+
+            var gameplayEnterParameters = new GameplayEnterParameters(Scenes.Gameplay, nextNumberLevel);
+            _exitParameters = new GameplayExitParameters(gameplayEnterParameters);
+        }
+
+        private async UniTask LoadLevel(int index)
+        {
+            if (index < 0 || index >= _mission.Maps.Count)
+                index = 0;
+            
+            if (_currentLevel != null)
+            {
+                if (_playerService.Player != null)
+                    UnsubscribeFromPlayerEvents(_playerService.Player);
+                _currentLevel.CleanupAndDestroy();
+            }
+            
+            Level newLevel = Instantiate(_mission.Maps[index].Level);
+            GameObjectInjector.InjectObject(newLevel.gameObject, _container);
+
+            _currentLevel = newLevel;
+            _currentLevelInitData = _mission.Maps[index];
+            _currentLevelIndex = index;
 
             _obstacleService.GetData(_obstacleInitData);
 
@@ -133,80 +211,51 @@ namespace Game.Gameplay
 
             FloatingTextView floatingTextView = await _viewFactory.CreateFloatingTextView();
             floatingTextView.Deactivate();
-
             _floatingTextService.Init(floatingTextView);
 
             await _currentLevel.OnStartLevel();
-
-            var exitSceneSignalSubject = new Subject<Unit>();
-            _uiScene.Bind(exitSceneSignalSubject);
-
-            uiRoot.UIStateMachine.EnterIn<GameplayState>();
-            uiRoot.MoneyView.Show();
-            OnShowJoystickWithAttackButton();
-
-            var scene = SceneManager.GetActiveScene();
-
-            if (scene.name == Scenes.Gameplay)
+            
+            if (_playerService.Player != null)
             {
-                _endGamePanel = await _viewFactory.CreateEndGamePanel();
-                _endGamePanel.GoToVillageButton.onClick.AddListener(_uiScene.HandleGoToNextScene);
+                SubscribeToPlayerEvents(_playerService.Player);
+            }
+            
+            if (_endGamePanel != null)
+            {
                 _playerService.Player.Health.Die += _endGamePanel.Show;
                 _playerService.Player.Health.Die += _endGamePanel.SetDefeatPanel;
                 _playerService.Player.Health.Die += _pauseService.OnStopGameWithoutMusic;
-                uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _endGamePanel.SetLabelText;
                 _endGamePanel.OnSpawnPlayer += _currentLevel.HealthBar.Show;
+                _endGamePanel.OnSpawnPlayer += _currentLevel.Respawn;
             }
-            else
-            {
-                YG2.SaveProgress();
-                _currencyService.SaveMoney();
-            }
-
-            _playerService.Player.Health.Die += _uiScene.ResetCountdownTutorialPointer;
-            _playerService.Player.InputController.OnMoveButtonsPressed += _uiScene.ResetCountdownTutorialPointer;
-            uiRoot.SettingsButton.onClick.AddListener(_playerService.Player.InputController.LockPlayerMovement);
-            uiRoot.LeaderboardButton.onClick.AddListener(_playerService.Player.InputController.LockPlayerMovement);
-
-            var exitToSceneSignal = exitSceneSignalSubject.Select(_ => _exitParameters);
-
-            _uiScene.ResetCountdownTutorialPointer();
-
-            return exitToSceneSignal;
         }
 
-        private void OnDestroy()
+        private void SubscribeToPlayerEvents(Player.Core.Player player)
         {
-            var scene = SceneManager.GetActiveScene();
-
-            if (scene.name == Scenes.Gameplay)
-            {
-                _endGamePanel.GoToVillageButton.onClick.RemoveListener(_uiScene.HandleGoToNextScene);
-                _playerService.Player.Health.Die -= _endGamePanel.Show;
-                _playerService.Player.Health.Die -= _endGamePanel.SetDefeatPanel;
-                _playerService.Player.Health.Die -= _pauseService.OnStopGameWithoutMusic;
-                _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged -= _endGamePanel.SetLabelText;
-                _endGamePanel.OnSpawnPlayer -= _currentLevel.HealthBar.Show;
-            }
-
-            _playerService.Player.Health.Die -= _uiScene.ResetCountdownTutorialPointer;
-            _playerService.Player.InputController.OnMoveButtonsPressed -= _uiScene.ResetCountdownTutorialPointer;
-            _uiRoot.SettingsButton.onClick.RemoveListener(_playerService.Player.InputController.LockPlayerMovement);
-            _uiRoot.LeaderboardButton.onClick.RemoveListener(_playerService.Player.InputController.LockPlayerMovement);
+            player.Health.Die += _uiScene.ResetCountdownTutorialPointer;
+            player.InputController.OnMoveButtonsPressed += _uiScene.ResetCountdownTutorialPointer;
+            _uiRoot.SettingsButton.onClick.AddListener(player.InputController.LockPlayerMovement);
+            _uiRoot.LeaderboardButton.onClick.AddListener(player.InputController.LockPlayerMovement);
         }
 
-        public void GetGameplayExitParameters()
+        private void UnsubscribeFromPlayerEvents(Player.Core.Player player)
         {
-            _audioSoundsService.PlayMusic(SoundsType.ActionMusic);
+            player.Health.Die -= _uiScene.ResetCountdownTutorialPointer;
+            player.InputController.OnMoveButtonsPressed -= _uiScene.ResetCountdownTutorialPointer;
+            _uiRoot.SettingsButton.onClick.RemoveListener(player.InputController.LockPlayerMovement);
+            _uiRoot.LeaderboardButton.onClick.RemoveListener(player.InputController.LockPlayerMovement);
+        }
 
-            _uiRoot.UIRootButtons.Deactivate();
+        private void OnNextLevelButtonClick()
+        {
+            // _experiencePoints.ResetAccumulatedValues();
+            _currencyService.ResetAccumulatedMoney();
 
-            int nextNumberLevel = _missionService.CurrentNumberLevel + NextOperationStep;
-            _missionService.SetCurrentNumberLevel(nextNumberLevel);
+            int nextIndex = (_currentLevelIndex + 1) % _mission.Maps.Count;
+            _ = LoadLevel(nextIndex);
 
-            var gameplayEnterParameters = new GameplayEnterParameters(Scenes.Gameplay, nextNumberLevel);
-
-            _exitParameters = new GameplayExitParameters(gameplayEnterParameters);
+            _endGamePanel.Hide();
+            _pauseService.OnPlayGame();
         }
 
         private async UniTask InitData()

@@ -18,7 +18,7 @@ MonoBehaviour:
   m_GUID: 00e14613bd85ac64c8df65c129111b7d
   m_SerializeEntries:
   - m_GUID: 040bf1a9f4cbd684ead9ae7289cc1742
-    m_Address: Assets/Prefabs/Audio/Sounds/ActionMusic.wav
+    m_Address: ActionMusic
     m_ReadOnly: 0
     m_SerializedLabels:
     - Music
@@ -29,7 +29,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 21b960d92f7b4b048bc658f5202f8c9e
-    m_Address: Assets/Prefabs/Effects/Particles/BottleHit.prefab
+    m_Address: BottleHit
     m_ReadOnly: 0
     m_SerializedLabels:
     - Particles
@@ -65,7 +65,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bcdf12acf43d0ed4a8223bb730b9d07c
-    m_Address: Assets/Prefabs/Audio/Sounds/Hit.mp3
+    m_Address: Hit
     m_ReadOnly: 0
     m_SerializedLabels:
     - Sound
@@ -81,7 +81,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f9bc6b20471484044b4743e8ab97b7c5
-    m_Address: Assets/Prefabs/Audio/Sounds/UIButtonClick.wav
+    m_Address: UIButtonClick
     m_ReadOnly: 0
     m_SerializedLabels:
     - Sound

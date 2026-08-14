@@ -67,14 +67,36 @@ namespace Player.Level
 
         private void OnDestroy()
         {
-            foreach (var turnTrigger in _turnTriggers)
+            if (_player != null)
             {
-                turnTrigger.OnTurn -= _player.StartTurn;
+                foreach (var turnTrigger in _turnTriggers)
+                {
+                    turnTrigger.OnTurn -= _player.StartTurn;
+                }
+
+                _player.Health.HealthChanged -= HandleHealthChanges;
+                _player.Health.IsSpawnedDamageText -= _floatingTextService.OnSpawnFloatingText;
+                _player.Health.IsSpawnedHealingText -= _floatingTextService.OnSpawnFloatingText;
+            }
+        }
+        
+        public void CleanupAndDestroy()
+        {
+            ObstacleSpawner?.DeactivateAll();
+            
+            if (HealthBar != null)
+            {
+                Destroy(HealthBar.gameObject);
+                HealthBar = null;
             }
             
-            _player.Health.HealthChanged -= HandleHealthChanges;
-            _player.Health.IsSpawnedDamageText -= _floatingTextService.OnSpawnFloatingText;
-            _player.Health.IsSpawnedHealingText -= _floatingTextService.OnSpawnFloatingText;
+            if (_player != null)
+            {
+                Destroy(_player.gameObject);
+                _player = null;
+            }
+            
+            Destroy(gameObject);
         }
 
         public void GetDependencies(
@@ -102,6 +124,12 @@ namespace Player.Level
             ObstacleSpawner.Respawn(_levelInitData);
             
             await CreatePlayer();
+        }
+
+        public void Respawn()
+        {
+            ObstacleSpawner.Respawn(_levelInitData);
+            RespawnPlayer();
         }
 
         protected async UniTask CreatePlayer()
@@ -143,6 +171,25 @@ namespace Player.Level
         protected void GoToNextScene()
         {
             OnGoToNextScene?.Invoke();
+        }
+        
+        private void RespawnPlayer()
+        {
+            if (_player == null)
+            {
+                Debug.LogError("Player is not created yet! Call CreatePlayer first.");
+                return;
+            }
+            
+            if (!_player.gameObject.activeSelf)
+                _player.gameObject.SetActive(true);
+            
+            _player.transform.position = _levelInitData.PlayerSpawnPosition;
+            _player.transform.rotation = Quaternion.identity;
+            
+            _player.Health.LoadHealth(ObstacleSpawner.MaxMoney, ObstacleSpawner.CasualMoney);
+            
+            _player.StateMachine.SwitchState(State.StateId.Idle);
         }
 
         private void HandleHealthChanges(float currentHealth, float maxHealth, float targetHealth)

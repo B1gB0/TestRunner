@@ -13,7 +13,7 @@ namespace Player.State
             _stateMachine = _player.StateMachine;
         }
 
-        public StateId IdState => StateId.Idle;
+        public StateId IdState => StateId.Dance;
 
         public void Enter()
         {

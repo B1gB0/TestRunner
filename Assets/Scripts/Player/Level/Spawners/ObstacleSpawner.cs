@@ -46,7 +46,7 @@ namespace Player.Level.Spawners
             SpawnObstacles();
         }
 
-        private void DeactivateAll()
+        public void DeactivateAll()
         {
             foreach (var bottle in _spawnedBottles)
             {

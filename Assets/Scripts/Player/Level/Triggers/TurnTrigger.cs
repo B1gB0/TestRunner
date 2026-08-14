@@ -1,19 +1,21 @@
 using System;
-using Player.Level.Triggers;
 using UnityEngine;
 
-public class TurnTrigger : Trigger
+namespace Player.Level.Triggers
 {
-    [SerializeField] private float turnAngle = 90f;
-    
-    public event Action<float> OnTurn;
-
-    private void OnTriggerEnter(Collider other)
+    public class TurnTrigger : Trigger
     {
-        if (other.TryGetComponent<Player.Core.Player>(out var _))
+        [SerializeField] private float turnAngle = 90f;
+    
+        public event Action<float> OnTurn;
+
+        private void OnTriggerEnter(Collider other)
         {
-            OnTurn?.Invoke(turnAngle);
-            Deactivate();
+            if (other.TryGetComponent<Player.Core.Player>(out var _))
+            {
+                OnTurn?.Invoke(turnAngle);
+                Deactivate();
+            }
         }
     }
 }

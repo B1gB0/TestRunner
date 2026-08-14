@@ -31,6 +31,7 @@ namespace Player.Core
 
         private PlayerIdleState _playerIdleState;
         private PlayerMoveState _playerMoveState;
+        private PlayerDanceState _playerDanceState;
 
         public Animator Animator => _animator;
         public Rigidbody Rigidbody => _rigidbody;
@@ -121,7 +122,7 @@ namespace Player.Core
         private void OnPlayHitEffect()
         {
             if (_particleEffectsService != null && Health != null && Health.HitPoint != null)
-                _particleEffectsService.PlayEffect(ParticleType.RedBloodHit, Health.HitPoint.position);
+                _particleEffectsService.PlayEffect(ParticleType.BottleHit, Health.HitPoint.position);
         }
 
         private void Initialize()
@@ -137,9 +138,11 @@ namespace Player.Core
 
             _playerIdleState = new PlayerIdleState(this);
             _playerMoveState = new PlayerMoveState(this);
+            _playerDanceState = new PlayerDanceState(this);
 
             _stateMachine.AddState(_playerIdleState);
             _stateMachine.AddState(_playerMoveState);
+            _stateMachine.AddState(_playerDanceState);
 
             _stateMachine.SwitchState(StateId.Idle);
 

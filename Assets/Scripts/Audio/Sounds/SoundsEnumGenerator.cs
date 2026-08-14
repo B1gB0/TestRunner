@@ -9,7 +9,7 @@ namespace Audio.Sounds
 {
     public static class SoundsEnumGenerator
     {
-        private const string EnumTemplate = @"namespace _Project.Scripts.Audio.Sounds
+        private const string EnumTemplate = @"namespace Scripts.Audio.Sounds
 {{
     public enum SoundsType
     {{
@@ -73,7 +73,7 @@ namespace Audio.Sounds
             }
 
             var content = string.Format(EnumTemplate, stringBuilder);
-            var path = Path.Combine(Application.dataPath, "_Project/Scripts/Audio/Sounds/SoundsType.cs");
+            var path = Path.Combine(Application.dataPath, "Scripts/Audio/Sounds/SoundsType.cs");
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.WriteAllText(path, content);

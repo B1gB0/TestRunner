@@ -4,7 +4,7 @@ using YG.Insides;
 
 namespace YG.EditorScr
 {
-    public class DocumentationEditor : Editor
+    public class DocumentationEditor : UnityEditor.Editor
     {
 #if RU_YG2
         [MenuItem("Tools/YG2/Помощь/Документация", false, 3)]

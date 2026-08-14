@@ -1,4 +1,6 @@
 using System;
+using Audio.Sounds;
+using Cysharp.Threading.Tasks;
 using DataBase.Data;
 using DG.Tweening;
 using Effects;
@@ -78,7 +80,7 @@ namespace Enemy
         public void AcceptScore(IScoreActorVisitor visitor)
         {
             visitor.Visit(this);
-            CurrencyService.AddMoney(Data.Money);
+            AudioSoundsService.PlaySound(SoundsType.Hit).Forget();
         }
 
         public virtual void OnReactState(bool isEnteredToState)
@@ -91,11 +93,6 @@ namespace Enemy
             _isDead = true;
 
             Die?.Invoke(this);
-        }
-
-        protected virtual void OnPlayHitEffect()
-        {
-            ParticleEffectsService.PlayEffect(ParticleType.BasicHit, transform.position);
         }
     }
 }

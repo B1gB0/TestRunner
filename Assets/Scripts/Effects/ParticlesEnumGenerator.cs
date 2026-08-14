@@ -9,7 +9,7 @@ namespace Effects
 {
     public static class ParticlesEnumGenerator
     {
-        private const string EnumTemplate = @"namespace _Project.Scripts.Effects
+        private const string EnumTemplate = @"namespace Scripts.Effects
 {{
     public enum ParticleType
     {{
@@ -73,7 +73,7 @@ namespace Effects
             }
 
             var content = string.Format(EnumTemplate, stringBuilder);
-            var path = Path.Combine(Application.dataPath, "_Project/Scripts/Effects/ParticleType.cs");
+            var path = Path.Combine(Application.dataPath, "Scripts/Effects/ParticleType.cs");
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             File.WriteAllText(path, content);

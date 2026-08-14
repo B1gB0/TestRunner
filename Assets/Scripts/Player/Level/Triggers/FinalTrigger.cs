@@ -1,4 +1,5 @@
 using System;
+using Player.State;
 using UnityEngine;
 
 namespace Player.Level.Triggers
@@ -9,9 +10,10 @@ namespace Player.Level.Triggers
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent<Player.Core.Player>(out var _))
+            if (other.TryGetComponent<Player.Core.Player>(out var player))
             {
                 OnVictory?.Invoke();
+                player.StateMachine.SwitchState(StateId.Dance);
                 Deactivate();
             }
         }

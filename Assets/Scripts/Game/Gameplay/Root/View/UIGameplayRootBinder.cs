@@ -123,6 +123,7 @@ namespace Game.Gameplay.Root.View
                         ShowTutorialKeyboardView();
                     else
                         ShowTutorialPointer();
+                    
                 }
             }
             catch (OperationCanceledException) { }

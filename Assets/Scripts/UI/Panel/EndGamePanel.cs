@@ -126,21 +126,11 @@ namespace UI.Panel
             if (_missionService.CurrentNumberLevel ==
                 _missionService.CurrentMission.Maps.Count - CountCorrectFactor)
             {
-                _nextLevelButton.gameObject.SetActive(false);
-
-                switch (_missionService.CurrentMission.Id)
-                {
-                    case Missions.Graveyard:
-                        YG2.SaveProgress();
-                        break;
-                    case Missions.BanditVillage:
-                        YG2.SaveProgress();
-                        break;
-                }
+                _nextLevelButton.gameObject.SetActive(true);
             }
             else
             {
-                _nextLevelButton.gameObject.SetActive(true);
+                _nextLevelButton.gameObject.SetActive(false);
             }
 
             _rebornPlayerButton.gameObject.SetActive(false);

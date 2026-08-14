@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66898159fdbc49bba948aa5b991fe92b, type: 3}
   m_Name: ParticlesConfig
   m_EditorClassIdentifier: 
-  Particles: []
+  Particles:
+  - ParticleName: BottleHit
   _particleLabel: Particles
