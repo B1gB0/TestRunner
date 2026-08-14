@@ -19,11 +19,8 @@ namespace UI.Panel
         private const string RewardAdRebornId = "RebornPlayer";
 
         [SerializeField] private TMP_Text _labelText;
-        [SerializeField] private TMP_Text _accumulatedKillsText;
         [SerializeField] private TMP_Text _accumulatedGoldText;
-        [SerializeField] private TMP_Text _accumulatedScoreText;
-
-        [SerializeField] private Button _goToVillageButton;
+        
         [SerializeField] private Button _rebornPlayerButton;
         [SerializeField] private Button _nextLevelButton;
 
@@ -42,8 +39,7 @@ namespace UI.Panel
 
         public event Action OnRewardAdSuccessShowed;
         public event Action OnSpawnPlayer;
-
-        public Button GoToVillageButton => _goToVillageButton;
+        
         public Button NextLevelButton => _nextLevelButton;
 
         [Inject]
@@ -67,7 +63,6 @@ namespace UI.Panel
 
         private void OnEnable()
         {
-            _goToVillageButton.onClick.AddListener(Hide);
             _rebornPlayerButton.onClick.AddListener(OnShowRewardAd);
 
 #if UNITY_EDITOR
@@ -84,7 +79,6 @@ namespace UI.Panel
             YG2.onHideWindowGame -= _pauseService.OnStopGameWithMusic;
             
             _nextLevelButton.onClick.AddListener(_pauseService.OnPlayGame);
-            _goToVillageButton.onClick.AddListener(_pauseService.OnPlayGame);
             
 #if UNITY_EDITOR
             _rebornPlayerButton.onClick.AddListener(_pauseService.OnPlayGame);
@@ -93,7 +87,6 @@ namespace UI.Panel
 
         private void OnDisable()
         {
-            _goToVillageButton.onClick.RemoveListener(Hide);
             _rebornPlayerButton.onClick.RemoveListener(OnShowRewardAd);
 
 #if UNITY_EDITOR
@@ -111,7 +104,6 @@ namespace UI.Panel
             _currencyService.ResetAccumulatedMoney();
             
             _nextLevelButton.onClick.RemoveListener(_pauseService.OnPlayGame);
-            _goToVillageButton.onClick.RemoveListener(_pauseService.OnPlayGame);
             
 #if UNITY_EDITOR
             _rebornPlayerButton.onClick.RemoveListener(_pauseService.OnPlayGame);
@@ -123,15 +115,9 @@ namespace UI.Panel
 
         public void SetVictoryPanel()
         {
-            if (_missionService.CurrentNumberLevel ==
-                _missionService.CurrentMission.Maps.Count - CountCorrectFactor)
-            {
-                _nextLevelButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                _nextLevelButton.gameObject.SetActive(false);
-            }
+            _nextLevelButton.gameObject.SetActive(true);
+            
+            _accumulatedGoldText.text = _playerService.Player.Health.TargetHealth.ToString();
 
             _rebornPlayerButton.gameObject.SetActive(false);
 
@@ -142,6 +128,8 @@ namespace UI.Panel
 
         public void SetDefeatPanel()
         {
+            _accumulatedGoldText.text = "0";
+            
             _rebornPlayerButton.gameObject.SetActive(true);
             _nextLevelButton.gameObject.SetActive(false);
 
@@ -152,10 +140,6 @@ namespace UI.Panel
 
         public void Show()
         {
-            _accumulatedGoldText.text = _currencyService.AccumulatedMoney.ToString();
-            _accumulatedKillsText.text = _experiencePoints.AccumulatedKills.ToString();
-            _accumulatedScoreText.text = _experiencePoints.AccumulatedScore.ToString();
-            
             _tweenAnimationService.AnimateScale(transform);
         }
 

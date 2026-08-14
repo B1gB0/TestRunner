@@ -55,6 +55,11 @@ namespace Services
             OnGoldValueChanged?.Invoke(Money);
         }
 
+        public void SetAccumulatedMoney(int accumulatedMoney)
+        {
+            AccumulatedMoney = accumulatedMoney;
+        }
+
         public void SpendMoney(int gold)
         {
             Money -= gold;

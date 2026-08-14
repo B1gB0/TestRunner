@@ -11,8 +11,7 @@ namespace DataBase
         [SpreadsheetPage("Players")] public List<PlayerData> Players;
         [SpreadsheetPage("Obstacles")] public List<ObstacleData> Obstacles;
         
-        // [SpreadsheetPage("MissionLocalization")] public List<MissionLocalizationData> MissionsLocalization;
-        //
-        // [SpreadsheetPage("UILocalization")] public List<UILocalizationData> UILocalizationData;
+        [SpreadsheetPage("UILocalization")] public List<UILocalizationData> UILocalizationData;
+        [SpreadsheetPage("MissionLocalization")] public List<MissionLocalizationData> MissionsLocalization;
     }
 }

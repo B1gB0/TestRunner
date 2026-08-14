@@ -1907,6 +1907,7 @@ MonoBehaviour:
   - {fileID: 8867933826698119632}
   _addMoneyTriggers: []
   _spendMoneyTriggers: []
+  _finalTrigger: {fileID: 514964246715114904}
 --- !u!114 &642092363337818702
 MonoBehaviour:
   m_ObjectHideFlags: 0

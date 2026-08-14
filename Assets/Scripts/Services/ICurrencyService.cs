@@ -13,5 +13,6 @@ namespace Services
         public void SpendMoney(int gold);
         public void ResetAccumulatedMoney();
         public void SaveMoney();
+        public void SetAccumulatedMoney(int accumulatedMoney);
     }
 }

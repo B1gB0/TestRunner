@@ -32,6 +32,7 @@ namespace Player.Level
         [SerializeField] private List<TurnTrigger>  _turnTriggers;
         [SerializeField] private List<AddMoneyTrigger>  _addMoneyTriggers;
         [SerializeField] private List<SpendMoneyTrigger>  _spendMoneyTriggers;
+        [SerializeField] private FinalTrigger _finalTrigger;
 
         private IObstacleService _obstacleService;
         private IPlayerService _playerService;
@@ -47,6 +48,7 @@ namespace Player.Level
         public event Action IsInitiatedSpawners;
         public event Action PlayerIsSpawned;
         public event Action OnGoToNextScene;
+        public event Action OnLevelFinished;
 
         public HealthBar HealthBar { get; private set; }
 
@@ -65,6 +67,11 @@ namespace Player.Level
             _floatingTextService = floatingTextService;
         }
 
+        private void Start()
+        {
+            _finalTrigger.OnVictory += OnFinishedLevel;
+        }
+
         private void OnDestroy()
         {
             if (_player != null)
@@ -78,6 +85,8 @@ namespace Player.Level
                 _player.Health.IsSpawnedDamageText -= _floatingTextService.OnSpawnFloatingText;
                 _player.Health.IsSpawnedHealingText -= _floatingTextService.OnSpawnFloatingText;
             }
+            
+            _finalTrigger.OnVictory -= OnFinishedLevel;
         }
         
         public void CleanupAndDestroy()
@@ -130,6 +139,19 @@ namespace Player.Level
         {
             ObstacleSpawner.Respawn(_levelInitData);
             RespawnPlayer();
+            ResetTriggers();
+        }
+        
+        private void ResetTriggers()
+        {
+            foreach (var trigger in _turnTriggers) 
+                trigger.Activate();
+            foreach (var trigger in _addMoneyTriggers) 
+                trigger.Activate();
+            foreach (var trigger in _spendMoneyTriggers) 
+                trigger.Activate();
+            
+            _finalTrigger.Activate();
         }
 
         protected async UniTask CreatePlayer()
@@ -171,6 +193,11 @@ namespace Player.Level
         protected void GoToNextScene()
         {
             OnGoToNextScene?.Invoke();
+        }
+
+        private void OnFinishedLevel()
+        {
+            OnLevelFinished?.Invoke();
         }
         
         private void RespawnPlayer()

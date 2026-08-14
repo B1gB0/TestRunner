@@ -30,9 +30,9 @@ namespace Game.Gameplay
         [SerializeField] private DataFactory _dataFactory;
         [SerializeField] private ViewFactory _viewFactory;
         [SerializeField] private Mission _mission;
-        
+
         private int _currentLevelIndex;
-        
+
         private UIRootView _uiRoot;
         private UIGameplayRootBinder _uiScene;
         private Container _container;
@@ -51,7 +51,7 @@ namespace Game.Gameplay
 
         private ObstacleInitData _obstacleInitData;
         private PlayerInitData _playerInitData;
-        
+
         private Level _currentLevel;
         private LevelInitData _currentLevelInitData;
 
@@ -111,7 +111,7 @@ namespace Game.Gameplay
 
             // --- Создание первого уровня ---
             _currentLevelIndex = MinCountValue;
-            await LoadLevel(_currentLevelIndex); // вынесли в отдельный метод
+            await LoadLevel(_currentLevelIndex);
 
             var exitSceneSignalSubject = new Subject<Unit>();
             _uiScene.Bind(exitSceneSignalSubject);
@@ -124,17 +124,16 @@ namespace Game.Gameplay
             if (scene.name == Scenes.Gameplay)
             {
                 _endGamePanel = await _viewFactory.CreateEndGamePanel();
-                _endGamePanel.GoToVillageButton.onClick.AddListener(_uiScene.HandleGoToNextScene);
                 _endGamePanel.NextLevelButton.onClick.AddListener(OnNextLevelButtonClick);
                 uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged += _endGamePanel.SetLabelText;
+
+                SubscribeToEndGamePanel(); // Подписываемся после создания панели
             }
             else
             {
                 YG2.SaveProgress();
                 _currencyService.SaveMoney();
             }
-
-            // Подписки на игрока уже сделаны в LoadLevel, поэтому здесь их не дублируем
 
             var exitToSceneSignal = exitSceneSignalSubject.Select(_ => _exitParameters);
             _uiScene.ResetCountdownTutorialPointer();
@@ -143,23 +142,17 @@ namespace Game.Gameplay
 
         private void OnDestroy()
         {
-            var scene = SceneManager.GetActiveScene();
+            UnsubscribeFromEndGamePanel(); // Отписка от панели
 
             if (_endGamePanel != null)
             {
-                _endGamePanel.GoToVillageButton.onClick.RemoveListener(_uiScene.HandleGoToNextScene);
                 _endGamePanel.NextLevelButton.onClick.RemoveListener(OnNextLevelButtonClick);
-                if (scene.name == Scenes.Gameplay)
-                {
+                if (SceneManager.GetActiveScene().name == Scenes.Gameplay)
                     _uiRoot.LocalizationLanguageSwitcher.OnLanguageChanged -= _endGamePanel.SetLabelText;
-                }
             }
 
-            // Отписываемся от текущего игрока
             if (_playerService != null && _playerService.Player != null)
-            {
                 UnsubscribeFromPlayerEvents(_playerService.Player);
-            }
 
             if (_uiRoot != null)
             {
@@ -184,14 +177,17 @@ namespace Game.Gameplay
         {
             if (index < 0 || index >= _mission.Maps.Count)
                 index = 0;
-            
+
+            // Отписываемся от старого уровня и игрока, если они были
             if (_currentLevel != null)
             {
+                UnsubscribeFromEndGamePanel(); // отписка от панели (использует _currentLevel и _playerService.Player)
                 if (_playerService.Player != null)
                     UnsubscribeFromPlayerEvents(_playerService.Player);
                 _currentLevel.CleanupAndDestroy();
             }
-            
+
+            // Создаём новый уровень
             Level newLevel = Instantiate(_mission.Maps[index].Level);
             GameObjectInjector.InjectObject(newLevel.gameObject, _container);
 
@@ -214,19 +210,15 @@ namespace Game.Gameplay
             _floatingTextService.Init(floatingTextView);
 
             await _currentLevel.OnStartLevel();
-            
+
             if (_playerService.Player != null)
             {
                 SubscribeToPlayerEvents(_playerService.Player);
             }
-            
+
             if (_endGamePanel != null)
             {
-                _playerService.Player.Health.Die += _endGamePanel.Show;
-                _playerService.Player.Health.Die += _endGamePanel.SetDefeatPanel;
-                _playerService.Player.Health.Die += _pauseService.OnStopGameWithoutMusic;
-                _endGamePanel.OnSpawnPlayer += _currentLevel.HealthBar.Show;
-                _endGamePanel.OnSpawnPlayer += _currentLevel.Respawn;
+                SubscribeToEndGamePanel(); // Подписываемся на нового игрока/уровень
             }
         }
 
@@ -246,9 +238,44 @@ namespace Game.Gameplay
             _uiRoot.LeaderboardButton.onClick.RemoveListener(player.InputController.LockPlayerMovement);
         }
 
+        private void SubscribeToEndGamePanel()
+        {
+            if (_endGamePanel == null || _currentLevel == null || _playerService.Player == null)
+                return;
+
+            _currentLevel.OnLevelFinished += _endGamePanel.Show;
+            _currentLevel.OnLevelFinished += _endGamePanel.SetVictoryPanel;
+            _playerService.Player.Health.Die += _endGamePanel.Show;
+            _playerService.Player.Health.Die += _endGamePanel.SetDefeatPanel;
+            _playerService.Player.Health.Die += _pauseService.OnStopGameWithoutMusic;
+            _endGamePanel.OnSpawnPlayer += _currentLevel.HealthBar.Show;
+            _endGamePanel.OnSpawnPlayer += _currentLevel.Respawn;
+        }
+
+        private void UnsubscribeFromEndGamePanel()
+        {
+            if (_endGamePanel == null)
+                return;
+
+            if (_currentLevel != null)
+            {
+                _currentLevel.OnLevelFinished -= _endGamePanel.Show;
+                _currentLevel.OnLevelFinished -= _endGamePanel.SetVictoryPanel;
+                _endGamePanel.OnSpawnPlayer -= _currentLevel.HealthBar.Show;
+                _endGamePanel.OnSpawnPlayer -= _currentLevel.Respawn;
+            }
+
+            if (_playerService != null && _playerService.Player != null)
+            {
+                _playerService.Player.Health.Die -= _endGamePanel.Show;
+                _playerService.Player.Health.Die -= _endGamePanel.SetDefeatPanel;
+                _playerService.Player.Health.Die -= _pauseService.OnStopGameWithoutMusic;
+            }
+        }
+
         private void OnNextLevelButtonClick()
         {
-            // _experiencePoints.ResetAccumulatedValues();
+            // Сброс накопленных денег (опционально)
             _currencyService.ResetAccumulatedMoney();
 
             int nextIndex = (_currentLevelIndex + 1) % _mission.Maps.Count;

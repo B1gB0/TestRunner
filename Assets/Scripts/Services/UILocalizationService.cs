@@ -25,10 +25,10 @@ namespace Services
             if (IsInitiated)
                 return UniTask.CompletedTask;
 
-            // foreach (var data in _dataBaseService.Content.UILocalizationData)
-            // {
-            //     _uiLocalizationData.TryAdd(data.UITextType, data);
-            // }
+            foreach (var data in _dataBaseService.Content.UILocalizationData)
+            {
+                _uiLocalizationData.TryAdd(data.UITextType, data);
+            }
 
             IsInitiated = true;
 
