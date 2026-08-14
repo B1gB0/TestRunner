@@ -33,6 +33,7 @@ namespace Player.Level
         [SerializeField] private List<AddMoneyTrigger>  _addMoneyTriggers;
         [SerializeField] private List<SpendMoneyTrigger>  _spendMoneyTriggers;
         [SerializeField] private FinalTrigger _finalTrigger;
+        [SerializeField] private List<MultiplierMoneyTrigger> _multiplierMoneyTriggers;
 
         private IObstacleService _obstacleService;
         private IPlayerService _playerService;
@@ -50,6 +51,7 @@ namespace Player.Level
         public event Action OnGoToNextScene;
         public event Action OnLevelFinished;
 
+        public int Currentmultiplier { get; private set; }
         public HealthBar HealthBar { get; private set; }
 
         [Inject]
@@ -79,6 +81,11 @@ namespace Player.Level
                 foreach (var turnTrigger in _turnTriggers)
                 {
                     turnTrigger.OnTurn -= _player.StartTurn;
+                }
+                
+                foreach (var trigger in _multiplierMoneyTriggers)
+                {
+                    trigger.OnIncreaseMoney -= OnSetMultiplier;
                 }
 
                 _player.Health.HealthChanged -= HandleHealthChanges;
@@ -133,6 +140,11 @@ namespace Player.Level
             ObstacleSpawner.Respawn(_levelInitData);
             
             await CreatePlayer();
+            
+            foreach (var trigger in _multiplierMoneyTriggers)
+            {
+                trigger.OnIncreaseMoney += OnSetMultiplier;
+            }
         }
 
         public void Respawn()
@@ -140,6 +152,11 @@ namespace Player.Level
             ObstacleSpawner.Respawn(_levelInitData);
             RespawnPlayer();
             ResetTriggers();
+        }
+
+        private void OnSetMultiplier(int multiplier)
+        {
+            Currentmultiplier += multiplier;
         }
         
         private void ResetTriggers()

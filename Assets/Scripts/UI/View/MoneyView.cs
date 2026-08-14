@@ -25,12 +25,13 @@ namespace UI.View
         private void Start()
         {
             _text.text = _currencyService.Money.ToString();
-            _currencyService.OnGoldValueChanged += SetValue;
+            _currencyService.OnMoneyValueChanged += SetValue;
+            SetValue(_currencyService.Money);
         }
 
         private void OnDestroy()
         {
-            _currencyService.OnGoldValueChanged -= SetValue;
+            _currencyService.OnMoneyValueChanged -= SetValue;
             transform.DOKill();
         }
 

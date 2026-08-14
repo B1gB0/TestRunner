@@ -4,7 +4,7 @@ namespace Services
 {
     public interface ICurrencyService : IService
     {
-        public event Action<int> OnGoldValueChanged;
+        public event Action<int> OnMoneyValueChanged;
 
         public int Money { get; }
         public int AccumulatedMoney { get; }

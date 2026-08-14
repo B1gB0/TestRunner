@@ -10,7 +10,7 @@ namespace Services
     {
         private const int MinValue = 0;
 
-        public event Action<int> OnGoldValueChanged;
+        public event Action<int> OnMoneyValueChanged;
         public event Action<int> OnKeysChanged;
 
         public int Money { get; private set; }
@@ -24,7 +24,7 @@ namespace Services
                 return UniTask.CompletedTask;
 
             Money = YG2.saves.Money;
-            OnGoldValueChanged?.Invoke(Money);
+            OnMoneyValueChanged?.Invoke(Money);
 
             IsInitiated = true;
 
@@ -34,7 +34,7 @@ namespace Services
         public void SetMoney(int gold)
         {
             Money = gold;
-            OnGoldValueChanged?.Invoke(Money);
+            OnMoneyValueChanged?.Invoke(Money);
         }
 
         public void SetKeys(int keys)
@@ -52,7 +52,7 @@ namespace Services
         {
             Money += gold;
             AccumulatedMoney += gold;
-            OnGoldValueChanged?.Invoke(Money);
+            OnMoneyValueChanged?.Invoke(Money);
         }
 
         public void SetAccumulatedMoney(int accumulatedMoney)
@@ -63,7 +63,7 @@ namespace Services
         public void SpendMoney(int gold)
         {
             Money -= gold;
-            OnGoldValueChanged?.Invoke(Money);
+            OnMoneyValueChanged?.Invoke(Money);
         }
 
         public void SpendKeys(int keys)

@@ -275,7 +275,9 @@ namespace Game.Gameplay
 
         private void OnNextLevelButtonClick()
         {
-            // Сброс накопленных денег (опционально)
+            int money = (int)(_playerService.Player.Health.TargetHealth * _currentLevel.Currentmultiplier);
+            
+            _currencyService.AddMoney(money);
             _currencyService.ResetAccumulatedMoney();
 
             int nextIndex = (_currentLevelIndex + 1) % _mission.Maps.Count;
