@@ -1904,6 +1904,7 @@ MonoBehaviour:
   _turnTriggers:
   - {fileID: 2795618830356403344}
   - {fileID: 4735884716483016071}
+  - {fileID: 8867933826698119632}
   _addMoneyTriggers: []
   _spendMoneyTriggers: []
 --- !u!114 &642092363337818702
@@ -3834,6 +3835,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 6070091151173401404}
     m_Modifications:
     - target: {fileID: 1182865636523828527, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 3735776124358404556}
+    - target: {fileID: 1182865636523828527, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
       propertyPath: _multiplier
       value: 3
       objectReference: {fileID: 0}
@@ -3888,9 +3893,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8368581023406397788, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3735776124358404556}
-    - targetCorrespondingSourceObject: {fileID: 8368581023406397788, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 3914390909698093333}
   m_SourcePrefab: {fileID: 100100000, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
 --- !u!4 &7113314810484408843 stripped
 Transform:
@@ -3923,27 +3925,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &3914390909698093333
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8333184296974059806}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.2774205, y: 3.1841269, z: 1.1279066}
-  m_Center: {x: 0.0065426207, y: 1.6253953, z: -1.6641252}
 --- !u!1001 &3908646535623752298
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4139,6 +4120,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 6070091151173401404}
     m_Modifications:
     - target: {fileID: 1182865636523828527, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
+      propertyPath: _animator
+      value: 
+      objectReference: {fileID: 8546936593270148186}
+    - target: {fileID: 1182865636523828527, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
       propertyPath: _multiplier
       value: 1
       objectReference: {fileID: 0}
@@ -4193,9 +4178,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8368581023406397788, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8546936593270148186}
-    - targetCorrespondingSourceObject: {fileID: 8368581023406397788, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7275729611335633435}
   m_SourcePrefab: {fileID: 100100000, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}
 --- !u!1 &209861548954931895 stripped
 GameObject:
@@ -4223,27 +4205,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &7275729611335633435
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 209861548954931895}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.2774205, y: 3.1841269, z: 1.1279066}
-  m_Center: {x: 0.0065426207, y: 1.6253953, z: -1.6641252}
 --- !u!4 &1439862299078334882 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7291843246429622857, guid: 3ab47a1b020e6a9499639e19e33be21c, type: 3}

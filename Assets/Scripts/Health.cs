@@ -10,10 +10,12 @@ public class Health : MonoBehaviour
     private const int MinValue = 0;
     private const float RecoveryRate = 10f;
 
+    [SerializeField] private Vector3 _textSpawnOffset = new (0.5f, 0f, 0f);
     [SerializeField] private float _value;
     [SerializeField] private Transform _hitPoint;
 
     private CancellationTokenSource _healthCts;
+    private Transform _textSpawnPoint;
 
     public event Action Die;
     public event Action<Health> DieHealth;
@@ -33,6 +35,14 @@ public class Health : MonoBehaviour
     public bool IsHitting { get; private set; }
 
     public Transform HitPoint => _hitPoint;
+
+    private void Awake()
+    {
+        var go = new GameObject("TextSpawnPoint");
+        go.transform.SetParent(transform, false);
+        go.transform.localPosition = _textSpawnOffset;
+        _textSpawnPoint = go.transform;
+    }
 
     private void Start()
     {
@@ -55,9 +65,9 @@ public class Health : MonoBehaviour
         damage -= armor;
 
         IsSpawnedDamageText?.Invoke(damage.ToString(),
-            transform,
+            _textSpawnPoint,
             FloatingTextViewType.Damage,
-            Colors.GetColor(ColorName.DefaultWhiteTextColor));
+            Colors.GetColor(ColorName.RedUIPanelColor));
 
         TargetHealth -= damage;
 
@@ -95,7 +105,7 @@ public class Health : MonoBehaviour
     {
         IsSpawnedHealingText?.Invoke(
             healthValue.ToString(),
-            transform,
+            _textSpawnPoint,
             FloatingTextViewType.Healing,
             Colors.GetColor(ColorName.HealingColor));
 

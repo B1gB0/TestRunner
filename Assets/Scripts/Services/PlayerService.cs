@@ -34,7 +34,7 @@ namespace Services
             _dataBaseService = dataBaseService;
         }
         
-        public CinemachineFreeLook FreeLookCamera { get; private set; }
+        public CinemachineVirtualCamera FreeLookCamera { get; private set; }
 
         public UniTask Init()
         {
@@ -97,7 +97,7 @@ namespace Services
             Player.StateMachine.SwitchState(StateId.Idle);
         }
 
-        public void GetSceneObjects(Container container, CinemachineFreeLook freeLookCamera)
+        public void GetSceneObjects(Container container, CinemachineVirtualCamera freeLookCamera)
         {
             _container = container;
             FreeLookCamera = freeLookCamera;

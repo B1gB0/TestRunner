@@ -2,7 +2,7 @@ namespace UI.View
 {
     public enum FloatingTextViewType
     {
-        Gold = 0,
+        Money = 0,
         Damage = 1,
         Healing = 2,
     }

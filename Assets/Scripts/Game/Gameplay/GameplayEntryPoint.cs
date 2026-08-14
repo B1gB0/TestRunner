@@ -25,7 +25,7 @@ namespace Game.Gameplay
         private const int MinCountValue = 0;
         private const int NextOperationStep = 1;
 
-        [SerializeField] private CinemachineFreeLook _freeLookCamera;
+        [SerializeField] private CinemachineVirtualCamera _freeLookCamera;
         [SerializeField] private UIGameplayRootBinder _sceneUIRootPrefab;
         [SerializeField] private DataFactory _dataFactory;
         [SerializeField] private ViewFactory _viewFactory;

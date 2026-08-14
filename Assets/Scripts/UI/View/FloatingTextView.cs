@@ -27,7 +27,7 @@ namespace UI.View
 
         public void SetFloatingText(string value, Transform target, FloatingTextViewType viewType, Color color)
         {
-            _text.text = viewType == FloatingTextViewType.Healing ? $"+{value}" : $"{value}";
+            _text.text = viewType == FloatingTextViewType.Healing ? $"+{value}" : $"-{value}";
             _text.color = color;
 
             SetIcon(viewType);
@@ -42,7 +42,9 @@ namespace UI.View
         {
             _icon.sprite = viewType switch
             {
-                FloatingTextViewType.Gold => _sprites[0],
+                FloatingTextViewType.Money => _sprites[0],
+                FloatingTextViewType.Damage => _sprites[0],
+                FloatingTextViewType.Healing => _sprites[0],
                 _ => null
             };
         }

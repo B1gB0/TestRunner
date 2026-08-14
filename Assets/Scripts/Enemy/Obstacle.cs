@@ -10,7 +10,6 @@ using UnityEngine;
 
 namespace Enemy
 {
-    [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(Collider))]
     public abstract class Obstacle : MonoBehaviour, IAcceptable, IExperienceScoreActor
     {
@@ -28,7 +27,6 @@ namespace Enemy
 
         public event Action<Obstacle> Die;
         
-        [field: SerializeField] public Rigidbody Rigidbody { get; private set; }
         [field: SerializeField] public Collider Collider { get; private set; }
         
         public bool IsEnemy { get; private set; }

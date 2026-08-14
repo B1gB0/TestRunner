@@ -8,6 +8,7 @@ namespace Player.Level.Triggers
     {
         [SerializeField] private int _multiplier;
         [SerializeField] private TextMeshPro _text;
+        [SerializeField] private Animator _animator;
         
         public event Action<int> OnIncreaseMoney;
 
@@ -21,7 +22,7 @@ namespace Player.Level.Triggers
             if (other.TryGetComponent<Player.Core.Player>(out var _))
             {
                 OnIncreaseMoney?.Invoke(_multiplier);
-                Deactivate();
+                _animator.CrossFade("Open", 0.5f);
             }
         }
     }

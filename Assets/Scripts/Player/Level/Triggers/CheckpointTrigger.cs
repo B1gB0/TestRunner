@@ -10,7 +10,7 @@ namespace Player.Level.Triggers
         {
             if (other.TryGetComponent<Player.Core.Player>(out var _))
             {
-                
+                _animator.CrossFade("Rise", 1f);
             }
         }
     }

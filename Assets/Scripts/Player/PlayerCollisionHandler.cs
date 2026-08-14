@@ -17,7 +17,7 @@ namespace Player
         {
             if (trigger.TryGetComponent(out Bottle bottle))
             {
-                _player.Health.TakeDamage(bottle.Data.Money);
+                _player.Health.TakeDamage(bottle.Data.Money, true);
                 bottle.gameObject.SetActive(false);
             }
             

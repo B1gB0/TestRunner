@@ -29,3 +29,5 @@ MonoBehaviour:
     Color: {r: 0.032846466, g: 0.8792453, b: 0, a: 1}
   - Name: 11
     Color: {r: 0, g: 1, b: 0.52937603, a: 1}
+  - Name: 5
+    Color: {r: 1, g: 0.017255716, b: 0, a: 1}

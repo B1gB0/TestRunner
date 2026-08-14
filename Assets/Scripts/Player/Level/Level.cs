@@ -37,10 +37,11 @@ namespace Player.Level
         private IPlayerService _playerService;
         private ParticleEffectsService _particleEffectsService;
         private AudioSoundsService _audioSoundsService;
+        private IFloatingTextService _floatingTextService;
 
         private LevelInitData _levelInitData;
         private PlayerInitData _playerInitData;
-        private CinemachineFreeLook _cinemachineFreeLook;
+        private CinemachineVirtualCamera _cinemachineFreeLook;
         private Core.Player _player;
 
         public event Action IsInitiatedSpawners;
@@ -54,12 +55,14 @@ namespace Player.Level
             IObstacleService obstacleService,
             IPlayerService playerService,
             ParticleEffectsService particleEffectsService,
-            AudioSoundsService audioSoundsService)
+            AudioSoundsService audioSoundsService,
+            IFloatingTextService floatingTextService)
         {
             _obstacleService = obstacleService;
             _playerService = playerService;
             _particleEffectsService = particleEffectsService;
             _audioSoundsService = audioSoundsService;
+            _floatingTextService = floatingTextService;
         }
 
         private void OnDestroy()
@@ -70,12 +73,14 @@ namespace Player.Level
             }
             
             _player.Health.HealthChanged -= HandleHealthChanges;
+            _player.Health.IsSpawnedDamageText -= _floatingTextService.OnSpawnFloatingText;
+            _player.Health.IsSpawnedHealingText -= _floatingTextService.OnSpawnFloatingText;
         }
 
         public void GetDependencies(
             LevelInitData levelInitData,
             PlayerInitData playerInitData,
-            CinemachineFreeLook cinemachineFreeLook,
+            CinemachineVirtualCamera cinemachineFreeLook,
             ViewFactory viewFactory,
             UIStateMachine uiStateMachine,
             UIRootView uiRootView
@@ -94,7 +99,7 @@ namespace Player.Level
         {
             InitSpawners(_obstacleService);
             
-            ObstacleSpawner.SpawnObstacles(_levelInitData);
+            ObstacleSpawner.Respawn(_levelInitData);
             
             await CreatePlayer();
         }
@@ -126,6 +131,8 @@ namespace Player.Level
             HealthBar.Show();
 
             _player.Health.HealthChanged += HandleHealthChanges;
+            _player.Health.IsSpawnedDamageText += _floatingTextService.OnSpawnFloatingText;
+            _player.Health.IsSpawnedHealingText += _floatingTextService.OnSpawnFloatingText;
 
             foreach (var turnTrigger in _turnTriggers)
             {
