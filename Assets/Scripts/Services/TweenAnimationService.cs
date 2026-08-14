@@ -46,6 +46,27 @@ namespace Services
                 TryOffGameObject(target, isDisableTarget);
             });
         }
+        
+        public Sequence AnimateRotation(Transform target, float rotationDuration = 2f, float wobbleDuration = 1f)
+        {
+            if (!IsTargetValid(target))
+                return null;
+
+            Tween rotateY = target.DORotate(new Vector3(0, 360, 0), rotationDuration, RotateMode.LocalAxisAdd)
+                .SetEase(Ease.Linear)
+                .SetLoops(-1, LoopType.Incremental)
+                .SetUpdate(true);
+
+            Tween wobbleX = target.DORotate(new Vector3(10, 0, 0), wobbleDuration, RotateMode.LocalAxisAdd)
+                .SetEase(Ease.InOutSine)
+                .SetLoops(-1, LoopType.Yoyo)
+                .SetUpdate(true);
+
+            return DOTween.Sequence()
+                .Append(rotateY)
+                .Join(wobbleX)
+                .SetUpdate(true);
+        }
 
         public async UniTask AnimateScaleAsync(Transform target, bool isDisableTarget = false)
         {

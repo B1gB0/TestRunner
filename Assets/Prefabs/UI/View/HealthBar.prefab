@@ -87,7 +87,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.712
+  m_Value: 0.59
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -142,8 +142,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SmoothSlider: {fileID: 1307878932289104527}
   Slider: {fileID: 3763862485438495459}
-  TextValue: {fileID: 0}
-  NameText: {fileID: 0}
+  TextValue: {fileID: 4668441061715619293}
+  NameText: {fileID: 5245105082209095975}
   _showPoint: {fileID: 0}
   _hidePoint: {fileID: 0}
   _weaponPanelPoint: {fileID: 0}
@@ -328,7 +328,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.712
+  m_FillAmount: 0.59
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -576,8 +576,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -30, y: -10}
+  m_AnchoredPosition: {x: 1, y: 0}
+  m_SizeDelta: {x: -28, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6433526562391358936
 CanvasRenderer:

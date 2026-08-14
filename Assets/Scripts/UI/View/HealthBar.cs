@@ -4,13 +4,7 @@ namespace UI.View
     {
         private Health _health;
 
-        private void OnEnable()
-        {
-            _health.Die += OnDie;
-            _health.HealthChanged += OnChangedValues;
-        }
-
-        private void OnDisable()
+        private void OnDestroy()
         {
             _health.Die -= OnDie;
             _health.HealthChanged -= OnChangedValues;
@@ -19,6 +13,8 @@ namespace UI.View
         public void Construct(Health health)
         {
             _health = health;
+            _health.Die += OnDie;
+            _health.HealthChanged += OnChangedValues;
         }
 
         private void OnDie()

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using Cinemachine;
 using Cysharp.Threading.Tasks;
 using DataBase.InitDataSO;
+using Game.Constant;
 using Game.GameRoot;
+using Player.Core;
 using Player.Level.Spawners;
 using Player.Level.Triggers;
 using Reflex.Attributes;
 using Services;
 using UI.StateMachine;
 using UI.View;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Player.Level
@@ -65,6 +68,8 @@ namespace Player.Level
             {
                 turnTrigger.OnTurn -= _player.StartTurn;
             }
+            
+            _player.Health.HealthChanged -= HandleHealthChanges;
         }
 
         public void GetDependencies(
@@ -120,19 +125,51 @@ namespace Player.Level
             HealthBar = await ViewFactory.CreateHealthBar(player.Health);
             HealthBar.Show();
 
+            _player.Health.HealthChanged += HandleHealthChanges;
+
             foreach (var turnTrigger in _turnTriggers)
             {
                 turnTrigger.OnTurn += player.StartTurn;
             }
         }
 
-        protected void CreateObstacles(int numberWave)
-        {
-        }
-
         protected void GoToNextScene()
         {
             OnGoToNextScene?.Invoke();
+        }
+
+        private void HandleHealthChanges(float currentHealth, float maxHealth, float targetHealth)
+        {
+            if (targetHealth >= ObstacleSpawner.PoorMoney && targetHealth <= ObstacleSpawner.CasualMoney)
+            {
+                HealthBar.ChangePlayerCategory(Colors.GetColor(ColorName.CasualColor), "Обычный");
+                _player.SetModel(PlayerModelType.Casual);
+            }
+            else if(targetHealth >= ObstacleSpawner.CasualMoney && targetHealth <= ObstacleSpawner.CoctailMoney)
+            {
+                HealthBar.ChangePlayerCategory(Colors.GetColor(ColorName.CoctailColor), "Получше");
+                _player.SetModel(PlayerModelType.Coctail);
+            }
+            else if (targetHealth >= ObstacleSpawner.MiddleMoney && targetHealth <= ObstacleSpawner.BusinessMoney)
+            {
+                HealthBar.ChangePlayerCategory(Colors.GetColor(ColorName.MiddleColor), "Состоятельный");
+                _player.SetModel(PlayerModelType.Middle);
+            }
+            else if (targetHealth >= ObstacleSpawner.BusinessMoney && targetHealth <= ObstacleSpawner.BlinqMoney)
+            {
+                HealthBar.ChangePlayerCategory(Colors.GetColor(ColorName.BusinessColor), "Бизнессмен");
+                _player.SetModel(PlayerModelType.Business);
+            }
+            else if (targetHealth >= ObstacleSpawner.BlinqMoney)
+            {
+                HealthBar.ChangePlayerCategory(Colors.GetColor(ColorName.BlinqColor), "Богач");
+                _player.SetModel(PlayerModelType.Blinq);
+            }
+            else if (targetHealth <= ObstacleSpawner.PoorMoney)
+            {
+                HealthBar.ChangePlayerCategory(Colors.GetColor(ColorName.PoorColor), "Бомж");
+                _player.SetModel(PlayerModelType.Poor);
+            }
         }
 
         private void InitSpawners(IObstacleService obstacleService)

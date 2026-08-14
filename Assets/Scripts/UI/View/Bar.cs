@@ -42,27 +42,17 @@ namespace UI.View
             _tweenAnimationService.AnimateMove(transform, _showPoint, _hidePoint, true);
         }
 
-        public void MoveToWeaponPanelPosition()
-        {
-            _tweenAnimationService.AnimateMove(transform, _weaponPanelPoint, _showPoint);
-        }
-
-        public void MoveToShowPosition()
-        {
-            _tweenAnimationService.AnimateMove(transform, _showPoint, _weaponPanelPoint);
-        }
-
-        public void GetPoints(Transform showPoint, Transform hidePoint, Transform weaponPanelPoint)
+        public void GetPoints(Transform showPoint, Transform hidePoint)
         {
             _showPoint = showPoint;
             _hidePoint = hidePoint;
-            _weaponPanelPoint = weaponPanelPoint;
         }
 
-        public void ChangePlayerCategory(Color color)
+        public void ChangePlayerCategory(Color color, string name)
         {
             Slider.image.color = color;
             NameText.color = color;
+            NameText.text = name;
         }
 
         protected void SetValues(float currentValue, float maxValue, float targetValue)

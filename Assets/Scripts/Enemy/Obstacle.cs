@@ -1,5 +1,6 @@
 using System;
 using DataBase.Data;
+using DG.Tweening;
 using Effects;
 using Enemy.StateMachine.Animation;
 using Enemy.StateMachine.Behaviour;
@@ -22,6 +23,8 @@ namespace Enemy
         protected ICurrencyService CurrencyService;
         
         private bool _isDead;
+        private ITweenAnimationService _tweenAnimationService;
+        private Sequence _rotationSequence;
 
         public event Action<Obstacle> Die;
         
@@ -42,14 +45,14 @@ namespace Enemy
 
         private void OnEnable()
         {
-            // Health.Die += OnDie;
-            // Health.IsDamaged += OnPlayHitEffect;
+            if (_tweenAnimationService != null)
+                _rotationSequence = _tweenAnimationService.AnimateRotation(transform);
         }
 
         private void OnDisable()
         {
-            // Health.Die -= OnDie;
-            // Health.IsDamaged -= OnPlayHitEffect;
+            _rotationSequence?.Kill();
+            _rotationSequence = null;
         }
 
         public void Construct(
@@ -58,7 +61,8 @@ namespace Enemy
             IFloatingTextService floatingTextService,
             ParticleEffectsService particleEffectsService,
             AudioSoundsService audioSoundsService,
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            ITweenAnimationService tweenAnimationService)
         {
             Player = player;
             Data = obstacleData;
@@ -70,6 +74,7 @@ namespace Enemy
             ParticleEffectsService = particleEffectsService;
             AudioSoundsService = audioSoundsService;
             CurrencyService = currencyService;
+            _tweenAnimationService = tweenAnimationService;
         }
 
         public void AcceptScore(IScoreActorVisitor visitor)

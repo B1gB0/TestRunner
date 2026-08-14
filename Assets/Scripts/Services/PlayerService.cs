@@ -53,22 +53,22 @@ namespace Services
         
         public PlayerCharacteristics InitPlayerCharacteristics(PlayerData data)
         {
-            // // var characteristics = YG2.saves.PlayerCharacteristics;
-            //
-            // if (characteristics != null)
-            // {
-            //     characteristics.SetCharacteristics(this);
-            // }
-            // else
-            // {
-            //     characteristics = new PlayerCharacteristics();
-            //     characteristics.SetStartingData(data);
-            //     characteristics.SetCharacteristics(this);
-            // }
-            //
-            // YG2.saves.PlayerCharacteristics = characteristics;
-            //
-            // return characteristics;
+            var characteristics = YG2.saves.PlayerCharacteristics;
+            
+            if (characteristics != null)
+            {
+                characteristics.SetCharacteristics(this);
+            }
+            else
+            {
+                characteristics = new PlayerCharacteristics();
+                characteristics.SetStartingData(data);
+                characteristics.SetCharacteristics(this);
+            }
+            
+            YG2.saves.PlayerCharacteristics = characteristics;
+            
+            return characteristics;
             return null;
         }
         

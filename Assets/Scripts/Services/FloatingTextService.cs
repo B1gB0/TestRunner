@@ -20,8 +20,14 @@ namespace Services
 
         public void Init(FloatingTextView textView)
         {
+            var poolParent = new GameObject(ObjectPoolDamageText);
+            Object.DontDestroyOnLoad(poolParent);
+            
             _poolDamageText =
-                new ObjectPool<FloatingTextView>(textView, Count, new GameObject(ObjectPoolDamageText).transform)
+                new ObjectPool<FloatingTextView>(
+                    textView,
+                    Count,
+                    poolParent.transform)
                 {
                     AutoExpand = IsAutoExpand,
                 };

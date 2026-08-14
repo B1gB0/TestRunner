@@ -6,15 +6,15 @@ namespace Player.State
 {
     public class PlayerMoveState : IPlayerState
     {
-        private const float StrafeFactor = 0.5f;
-        
+        private const float StrafeFactor = 0.5f; // Коэффициент бокового смещения
+
         private readonly Core.Player _player;
         private readonly PlayerStateMachine _stateMachine;
         private readonly PlayerAnimatedState _playerAnimatedState;
-        
+
         private bool _isTurning = false;
         private float _targetYaw;
-        private float _turnSpeed = 180f;
+        private float _turnSpeed = 180f; // градусов в секунду
 
         public PlayerMoveState(Core.Player player)
         {
@@ -40,7 +40,7 @@ namespace Player.State
             {
                 HandleTurning();
             }
-
+            
             Vector3 moveDirection = _player.transform.forward;
             moveDirection.y = 0;
             moveDirection.Normalize();
@@ -50,16 +50,11 @@ namespace Player.State
             
             Vector3 finalDirection = (moveDirection + strafeVector * StrafeFactor).normalized;
             
-            Vector3 velocity = finalDirection * _player.PlayerCharacteristics.MoveSpeed;
-            
-            velocity = ApplyGroundProjection(velocity);
-
-            _player.Rigidbody.velocity = velocity;
-            
-            float currentSpeed = new Vector3(_player.Rigidbody.velocity.x, 0, _player.Rigidbody.velocity.z).magnitude;
-            _playerAnimatedState.OnMove(currentSpeed / _player.PlayerCharacteristics.MoveSpeed);
+            float speed = _player.PlayerCharacteristics.MoveSpeed;
+            Vector3 moveDelta = finalDirection * speed * Time.fixedDeltaTime;
+            _player.transform.position += moveDelta;
         }
-        
+
         public void StartTurn(float angleDelta)
         {
             _targetYaw = _player.transform.eulerAngles.y + angleDelta;
@@ -81,23 +76,6 @@ namespace Player.State
             {
                 _isTurning = false;
             }
-        }
-
-        private Vector3 ApplyGroundProjection(Vector3 velocity)
-        {
-            float rayLength = 1f;
-            Vector3 rayStart = _player.transform.position + Vector3.up * 0.1f;
-            if (Physics.Raycast(rayStart, Vector3.down, out RaycastHit hit, rayLength))
-            {
-                velocity = Vector3.ProjectOnPlane(velocity, hit.normal);
-                if (velocity.y < 0)
-                    velocity.y -= 2f;
-            }
-            else
-            {
-                velocity.y = _player.Rigidbody.velocity.y;
-            }
-            return velocity;
         }
     }
 }

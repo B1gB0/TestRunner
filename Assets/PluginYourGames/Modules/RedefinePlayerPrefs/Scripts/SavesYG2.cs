@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using Player.Characteristics;
 
 namespace YG
 {
     public partial class SavesYG
     {
+        public PlayerCharacteristics PlayerCharacteristics;
         public bool IsFirstLaunch = true;
         public int Money;
         

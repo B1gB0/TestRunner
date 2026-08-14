@@ -26,6 +26,7 @@ namespace Services
         private ParticleEffectsService _particleEffectsService;
         // private IExperiencePoints _experiencePoints;
         private ICurrencyService _currencyService;
+        private ITweenAnimationService _tweenAnimationService;
 
         private ObstacleInitData _obstacleInitData;
         
@@ -42,7 +43,8 @@ namespace Services
             ParticleEffectsService particleEffectsService,
             IFloatingTextService floatingTextService,
             // IExperiencePoints experiencePoints,
-            ICurrencyService currencyService)
+            ICurrencyService currencyService,
+            ITweenAnimationService tweenAnimationService)
         {
             _dataBaseService = dataBaseService;
             _playerService = playerService;
@@ -51,6 +53,7 @@ namespace Services
             _floatingTextService = floatingTextService;
             // _experiencePoints = experiencePoints;
             _currencyService = currencyService;
+            _tweenAnimationService = tweenAnimationService;
         }
 
         public UniTask Init()
@@ -86,7 +89,8 @@ namespace Services
                 _floatingTextService,
                 _particleEffectsService,
                 _audioSoundsService,
-                _currencyService);
+                _currencyService,
+                _tweenAnimationService);
 
             return bottle;
         }
@@ -104,7 +108,8 @@ namespace Services
                 _floatingTextService,
                 _particleEffectsService,
                 _audioSoundsService,
-                _currencyService);
+                _currencyService,
+                _tweenAnimationService);
 
             return money;
         }
@@ -113,11 +118,14 @@ namespace Services
         {
             if (_bottlePool != null)
                 return;
+            
+            var poolParent = new GameObject(BottlePool);
+            Object.DontDestroyOnLoad(poolParent);
 
             _bottlePool = new ObjectPool<Bottle>(
                 _obstacleInitData.BottlePrefab,
                 DefaultCountObjectsInPool,
-                new GameObject(BottlePool).transform)
+                poolParent.transform.transform)
             {
                 AutoExpand = IsAutoExpand,
             };
@@ -127,11 +135,14 @@ namespace Services
         {
             if (_moneyPool != null)
                 return;
+            
+            var poolParent = new GameObject(MoneyPool);
+            Object.DontDestroyOnLoad(poolParent);
 
             _moneyPool = new ObjectPool<Money>(
                 _obstacleInitData.MoneyPrefab,
                 DefaultCountObjectsInPool,
-                new GameObject(MoneyPool).transform)
+                poolParent.transform)
             {
                 AutoExpand = IsAutoExpand,
             };

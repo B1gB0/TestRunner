@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Enemy;
+using UnityEngine;
 
 namespace Player
 {
@@ -14,10 +15,17 @@ namespace Player
 
         private void OnTriggerEnter(Collider trigger)
         {
-            // if (trigger.TryGetComponent(out EntranceTrigger entranceTrigger))
-            // {
-            //     entranceTrigger.Entrance.OpenGate();
-            // }
+            if (trigger.TryGetComponent(out Bottle bottle))
+            {
+                _player.Health.TakeDamage(bottle.Data.Money);
+                bottle.gameObject.SetActive(false);
+            }
+            
+            if (trigger.TryGetComponent(out Money money))
+            {
+                _player.Health.AddHealth(money.Data.Money);
+                money.gameObject.SetActive(false);
+            }
         }
         
         private void OnTriggerExit(Collider trigger)

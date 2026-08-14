@@ -89,6 +89,34 @@ namespace Player.Core
         {
             _playerMoveState.StartTurn(angle);
         }
+        
+        public void SetModel(PlayerModelType modelType)
+        {
+            switch (modelType)
+            {
+                case PlayerModelType.Blinq: SetActiveModel(_blinq); break;
+                case PlayerModelType.Business: SetActiveModel(_buisiness); break;
+                case PlayerModelType.Casual: SetActiveModel(_casual); break;
+                case PlayerModelType.Middle: SetActiveModel(_middle); break;
+                case PlayerModelType.Coctail: SetActiveModel(_coctail); break;
+                case PlayerModelType.Poor: SetActiveModel(_poor); break;
+            }
+        }
+
+        private void SetActiveModel(GameObject modelToActivate)
+        {
+            _blinq.SetActive(false);
+            _buisiness.SetActive(false);
+            _casual.SetActive(false);
+            _middle.SetActive(false);
+            _coctail.SetActive(false);
+            _poor.SetActive(false);
+            
+            if (modelToActivate != null)
+            {
+                modelToActivate.SetActive(true);
+            }
+        }
 
         private void OnPlayHitEffect()
         {

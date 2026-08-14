@@ -19,7 +19,6 @@ namespace UI.View
         private const string HealthBarPath = "HealthBar";
         private const string TextViewPath = "TextView";
         private const string MoneyViewPath = "MoneyView";
-        private const string ShopAttributePanelPath = "ShopAttributePanel";
         private const string EndGamePanelPath = "EndGamePanel";
 
         private IResourceService _resourceService;
@@ -73,7 +72,7 @@ namespace UI.View
             GameObjectInjector.InjectSingle(healthBar.gameObject, _container);
             healthBar.Construct(health);
             healthBar.transform.SetParent(UIScene.transform, false);
-            healthBar.GetPoints(UIScene.ShowHealthPoint, UIScene.HideHealthPoint, UIScene.WeaponPoint);
+            healthBar.GetPoints(UIScene.ShowHealthPoint, UIScene.HideHealthPoint);
 
             return healthBar;
         }
